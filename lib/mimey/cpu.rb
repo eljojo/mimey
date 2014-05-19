@@ -13,6 +13,8 @@ module Mimey
     attr_accessor :clock
     # MMU
     attr_accessor :mmu
+    # nop-mode
+    attr_accessor :nop_mode
 
     # Default register values
     DEFAULTS = {
@@ -49,6 +51,10 @@ module Mimey
     # Executes next instruction
     def step
       operation = OPERATIONS[next_byte]
+      if not self.respond_to?(operation) and !!nop_mode
+        puts "warning! we don't know how to #{operation}"
+        operation = "nop"
+      end
       method(operation).call
     end
 
