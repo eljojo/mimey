@@ -1,5 +1,4 @@
-source "https://rubygems.org"
+source 'https://rubygems.org'
 
-group :development, :test do
-  gem "rspec"
-end
+# Specify your gem's dependencies in mimey.gemspec
+gemspec
