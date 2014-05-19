@@ -67,8 +67,8 @@ is being able to run [Pokémon Red and Blue][red-blue].
 
 ## Acknowledgements
 
-* [Nintendo](nintendo) for creating the Game Boy.
-* [Satoshi Tariji](satoshi-tariji) for creating Pokémon.
+* [Nintendo][nintendo] for creating the Game Boy.
+* [Satoshi Tariji][satoshi-tariji] for creating Pokémon.
 * [Episode 64 of the Pokémon TV Series][episode-64] for making me like Mr.
   Mime. Before that episode I really hated Mr. Mime (who
   can hate that Pokémon? I can't remember why I hated it).
@@ -79,6 +79,19 @@ is being able to run [Pokémon Red and Blue][red-blue].
 [satoshi-tariji]: http://en.wikipedia.org/wiki/Satoshi_Tajiri
 [episode-64]: http://bulbapedia.bulbagarden.net/wiki/EP064
 [imran-nazar]: http://imrannazar.com/GameBoy-Emulation-in-JavaScript
+
+## Roadmap (Based on Imran Nazar Article)
+
+- [] The CPU
+- [] Memory
+- [] GPU Timings
+- [] Graphics
+- [] Integration
+- [] Input
+- [] Sprites
+- [] Interrupts
+- [] Memory Banking
+- [] Timers
 
 ## Licence
 
