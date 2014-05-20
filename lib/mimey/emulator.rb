@@ -7,6 +7,7 @@ module Mimey
     def initialize(cpu_options = {})
       cpu_options = CPU::DEFAULTS.merge(cpu_options)
       @cpu = CPU.new(cpu_options)
+      @gpu = GPU.new(LcdScreen.new)
     end
 
     def nop_mode=(nop_mode)
@@ -22,6 +23,7 @@ module Mimey
       loop do
         @cpu.step
         @cpu.debug if !!debug_mode
+        @gpu.step
       end
     end
   end
