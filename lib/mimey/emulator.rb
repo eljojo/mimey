@@ -2,6 +2,8 @@ require 'mimey/cpu/operations'
 
 module Mimey
   class Emulator
+    attr_accessor :debug_mode
+
     def initialize(cpu_options = {})
       cpu_options = CPU::DEFAULTS.merge(cpu_options)
       @cpu = CPU.new(cpu_options)
@@ -17,7 +19,10 @@ module Mimey
     end
 
     def run
-      loop { @cpu.step }
+      loop do
+        @cpu.step
+        @cpu.debug if !!debug_mode
+      end
     end
   end
 end

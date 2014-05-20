@@ -64,6 +64,11 @@ module Mimey
       self
     end
 
+    # prints debug information
+    def debug
+      puts "a: #{a}, f: #{f}, b: #{b}, c: #{c}, d: #{d}, e: #{e}, h: #{h}, l: #{l}\tpc: #{pc}, sp: #{sp}, clock: #{clock}"
+    end
+
     # Reads the next byte from memory and increments PC by 1
     def next_byte
       @pc += 1
