@@ -30,8 +30,9 @@ module Mimey
 
     # RET
     def ret
-      @pc = next_word
-      @r_m = 3
+    	@pc = @mmu.word[@sp]
+    	@sp += 2
+    	@r_m = 3
       @r_t = 12
     end
 
