@@ -42,5 +42,12 @@ module Mimey
       @r_m = 3
       @r_t = 12
     end
+
+    # JPnn
+    def jp_nn
+      @pc = @mmu.word[@pc]
+      @r_m = 3
+      @r_t = 12
+    end
   end
 end

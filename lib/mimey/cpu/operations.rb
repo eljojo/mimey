@@ -9,6 +9,7 @@ module Mimey
     # NOP, opcode 0x00. Does nothing
     def nop
       @r_m = 1
+      @r_t = 4
     end
 
     # Operations array, indexes methods names by opcode
@@ -120,7 +121,7 @@ module Mimey
       :_BF,
 
       # 0xC0
-      :_C0,        :pop_bc,     :_C2,       :_C3,         :_C4,
+      :_C0,        :pop_bc,     :_C2,       :jp_nn,         :_C4,
       # 0xC5
       :push_bc,    :add_a_n,    :_C7,       :_C8,         :ret,
       # 0xCA

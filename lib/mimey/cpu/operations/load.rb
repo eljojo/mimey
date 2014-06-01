@@ -160,8 +160,9 @@ module Mimey
 
     # LDIOnA
     def ld_io_n_a
-      @mmu.word[0xFF00 + next_byte] = @a
+      @mmu[0xFF00 + next_byte] = @a
       @r_m = 3
+      @r_t = 12
     end
 
     # LDAIOC
