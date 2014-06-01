@@ -1,21 +1,76 @@
 module Mimey
   # his class represents the Game Boy MMU
   class GPU
+    attr_reader :vram
+
     def initialize(screen)
       @screen = screen
       @vram = Array.new(8192, 0x00)
 
       reset_tileset
+
       @mmu = nil
-      @bg_map = false
       @line = nil
       @scy = nil
       @scx = nil
-      @bgtile = nil
+
+      @bg_map = false
+      @bgtile = false
+      @switchbg = false
+      @switchlcd = false
+
+      @pal = []
+    end
+
+    def [](addr)
+      case(addr)
+      # LCD Control
+      when 0xFF40
+        (@switchbg  ? 0x01 : 0x00) |
+		    (@bgmap     ? 0x08 : 0x00) |
+		    (@bgtile    ? 0x10 : 0x00) |
+		    (@switchlcd ? 0x80 : 0x00);
+      # Scroll Y
+      when 0xFF42
+        @scy
+      # Scroll X
+      when 0xFF43
+	      @scx
+	    # Current scanline
+      when 0xFF44
+        @line
+      end
     end
 
     def []=(i, n)
-      @vram[i] = n
+      case(addr)
+      # LCD Control
+      when 0xFF40
+        @switchbg  = ((n & 0x01) == 1)
+        @bgmap     = ((n & 0x08) == 1)
+        @bgtile    = ((n & 0x10) == 1)
+        @switchlcd = ((n & 0x80) == 1)
+      # Scroll Y
+      when 0xFF42
+        @scy = n
+      # Scroll X
+      when 0xFF43
+        @scx = n
+      # Background palette
+      when 0xFF47
+        4.times do |i|
+          case ((val >> (i * 2)) & 3)
+          when 0
+            @pal[i] = [255,255,255,255]
+          when 1
+            @pal[i] = [192,192,192,255]
+          when 2
+            @pal[i] = [ 96, 96, 96,255]
+          when 3
+            @pal[i] = [  0,  0,  0,255]
+          end
+        end
+      end
     end
 
     def step

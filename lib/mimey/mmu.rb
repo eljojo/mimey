@@ -6,6 +6,7 @@ module Mimey
     # Initializes the memory areas
     def initialize()
       @internal_memory = Array.new(8192, 0x00)
+      @zram = Array.new(8192, 0x00)
       @word_accessor = WordAccessor.new(self)
     end
 
@@ -16,6 +17,23 @@ module Mimey
         @rom[i]
       when 0xC000..0xDFFF, 0xE000..0xFDFF
         @internal_memory[i & 0x1FFF]
+      when 0xF000..0xFFFF
+        case i & 0x0F00
+          # Zero-page
+        when 0xF00
+          if i >= 0xFF80
+            @zram[i & 0x7F]
+          else
+            # I/O control handling
+            case i & 0x00F0
+              # GPU (64 registers)
+            when 0x40, 0x50, 0x60, 0x70
+              # GPU.rb(addr)
+            else
+              0
+            end
+          end
+        end
       end
     end
 
@@ -30,8 +48,23 @@ module Mimey
       when 0xC000..0xDFFF, 0xE000..0xFDFF
         @internal_memory[i & 0x1FFF] = n
       when 0x8000..0x9FFF
-        @gpu[i & 0x1FFF] = n
+        @gpu.vram[i & 0x1FFF] = n
         @gpu.update_tile(i, n)
+      when 0xF000..0xFFFF
+        case i & 0x0F00
+          # Zero-page
+        when 0xF00
+          if i >= 0xFF80
+            @zram[i & 0x7F] = n
+          else
+            # I/O control handling
+            case i & 0x00F0
+              # GPU (64 registers)
+            when 0x40, 0x50, 0x60, 0x70
+              # GPU.wb(addr, val)
+            end
+          end
+        end
       end
     end
 
