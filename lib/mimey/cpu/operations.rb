@@ -2,6 +2,7 @@ require 'mimey/cpu/operations/alu'
 require 'mimey/cpu/operations/bit'
 require 'mimey/cpu/operations/jump'
 require 'mimey/cpu/operations/load'
+require 'mimey/cpu/operations/stack'
 
 module Mimey
   class CPU
@@ -37,13 +38,13 @@ module Mimey
       # 0xB0
       :or_b, :or_c, :or_d, :or_e, :or_h, :or_l, :or_mhl, :or_a, :_B8, :_B9, :_BA, :_BB, :_BC, :_BD, :_BE, :_BF,
       # 0xC0
-      :_C0, :_C1, :_C2, :_C3, :_C4, :_C5, :add_a_n, :_C7, :_C8, :_C9, :_CA, :_CB, :_CC, :_CD, :adc_a_n, :_CF,
+      :_C0, :pop_bc, :_C2, :_C3, :_C4, :push_bc, :add_a_n, :_C7, :_C8, :_C9, :_CA, :_CB, :_CC, :_CD, :adc_a_n, :_CF,
       # 0xD0
-      :_D0, :_D1, :_D2, :_D3, :_D4, :_D5, :_D6, :_D7, :_D8, :_D9, :_DA, :_DB, :_DC, :_DD, :_DE, :_DF,
+      :_D0, :pop_de, :_D2, :_D3, :_D4, :push_de, :_D6, :_D7, :_D8, :_D9, :_DA, :_DB, :_DC, :_DD, :_DE, :_DF,
       # 0xE0
-      :ld_io_n_a, :_E1, :ld_ioca, :_E3, :_E4, :_E5, :and_n, :_E7, :_E8, :_E9, :ld_mma, :_EB, :_EC, :_ED, :xor_n, :_EF,
+      :ld_io_n_a, :pop_hl, :ld_ioca, :_E3, :_E4, :push_hl, :and_n, :_E7, :_E8, :_E9, :ld_mma, :_EB, :_EC, :_ED, :xor_n, :_EF,
       # 0xF0
-      :ld_aio_n, :_F1, :ld_aioc, :_F3, :_F4, :_F5, :or_n, :_F7, :ld_hlspn, :_F9, :ld_amm, :_FB, :_FC, :_FD, :_FE, :_FF
+      :ld_aio_n, :pop_af, :ld_aioc, :_F3, :_F4, :push_af, :or_n, :_F7, :ld_hlspn, :_F9, :ld_amm, :_FB, :_FC, :_FD, :_FE, :_FF
     ].freeze
   end
 end
