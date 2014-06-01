@@ -58,6 +58,19 @@ module Mimey
       @mmu = MMU.new
     end
 
+    # restarts the emulation
+    # values gotten from
+    # http://imrannazar.com/content/files/jsgb-gpu-ctrl.jsgb.js
+    def reset
+      self.pc=0x100
+      # MMU._inbios=0;
+      self.sp = 0xFFFE
+      self.hl = 0x014D
+      self.c = 0x13
+      self.e = 0xD8
+      self.a = 1
+    end
+
     # Executes next instruction
     def step
       operation = OPERATIONS[next_byte]

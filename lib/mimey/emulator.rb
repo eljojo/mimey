@@ -22,6 +22,7 @@ module Mimey
     end
 
     def run
+      @cpu.reset
       loop do
         @cpu.step
         @cpu.debug if !!debug_mode
