@@ -6,7 +6,6 @@ module Mimey
     # Initializes the memory areas
     def initialize()
       @internal_memory = Array.new(8192, 0x00)
-      @vram = Array.new(8192, 0x00)
       @word_accessor = WordAccessor.new(self)
     end
 
@@ -17,8 +16,6 @@ module Mimey
         @rom[i]
       when 0xC000..0xDFFF, 0xE000..0xFDFF
         @internal_memory[i & 0x1FFF]
-      when 0x8000..0x9FFF
-        @vram[i & 0x1FFF]
       end
     end
 
@@ -33,8 +30,8 @@ module Mimey
       when 0xC000..0xDFFF, 0xE000..0xFDFF
         @internal_memory[i & 0x1FFF] = n
       when 0x8000..0x9FFF
-        @vram[i & 0x1FFF] = n
-        @gpu.update_tile(i, n) if @gpu
+        @gpu[i & 0x1FFF] = n
+        @gpu.update_tile(i, n)
       end
     end
 

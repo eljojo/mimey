@@ -8,7 +8,7 @@ module Mimey
       cpu_options = CPU::DEFAULTS.merge(cpu_options)
       @cpu = CPU.new(cpu_options)
       @gpu = GPU.new(LcdScreen.new)
-      @gpu.mmu = @cpu.mmu
+      @cpu.mmu.gpu = @gpu
     end
 
     def nop_mode=(nop_mode)
