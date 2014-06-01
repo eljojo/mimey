@@ -61,6 +61,7 @@ module Mimey
     # Executes next instruction
     def step
       operation = OPERATIONS[next_byte]
+      @last_operation = operation
       if not self.respond_to?(operation) and !!nop_mode
         puts "warning! we don't know how to #{operation}"
         operation = "nop"
@@ -83,7 +84,7 @@ module Mimey
 
     # prints debug information
     def debug
-      puts "a: #{a}, f: #{f}, b: #{b}, c: #{c}, d: #{d}, e: #{e}, h: #{h}, l: #{l}\tpc: #{pc}, sp: #{sp}, clock m: #{clock_m}"
+      puts "op: #{@last_operation}\ta: #{a}, f: #{f}, b: #{b}, c: #{c}, d: #{d}, e: #{e}, h: #{h}, l: #{l}\tpc: #{pc}, sp: #{sp}, clock m: #{clock_m}"
     end
 
     # Reads the next byte from memory and increments PC by 1
