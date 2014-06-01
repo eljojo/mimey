@@ -65,7 +65,14 @@ module Mimey
         puts "warning! we don't know how to #{operation}"
         operation = "nop"
       end
+
+      @r_m = 0
+      @r_t = 0
+
       method(operation).call
+
+      @clock_m += @r_m
+      @clock_t += @r_t
     end
 
     # Loads a program
@@ -76,7 +83,7 @@ module Mimey
 
     # prints debug information
     def debug
-      puts "a: #{a}, f: #{f}, b: #{b}, c: #{c}, d: #{d}, e: #{e}, h: #{h}, l: #{l}\tpc: #{pc}, sp: #{sp}, clock: #{clock}"
+      puts "a: #{a}, f: #{f}, b: #{b}, c: #{c}, d: #{d}, e: #{e}, h: #{h}, l: #{l}\tpc: #{pc}, sp: #{sp}, clock m: #{clock_m}"
     end
 
     # Reads the next byte from memory and increments PC by 1

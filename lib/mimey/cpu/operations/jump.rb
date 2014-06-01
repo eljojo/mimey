@@ -3,7 +3,7 @@ module Mimey
     # JR n. Adds n (signed 8 bit number) to current address and jumps to it
     def jr_n
       @pc += as_signed_byte(next_byte)
-      @clock += 3
+      @r_m = 3
     end
 
     # JR cc,n.
@@ -14,10 +14,10 @@ module Mimey
         define_method(method_name) do
           if (send("#{f}_flag") == b)
             @pc += as_signed_byte(next_byte)
-            @clock += 3
+            @r_m = 3
           else
             next_byte
-            @clock += 2
+            @r_m = 2
           end
         end
       end

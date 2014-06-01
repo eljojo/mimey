@@ -10,7 +10,7 @@ describe Mimey::CPU do
     context "when n is positive" do
       before { cpu.load_with(0x00, 0x00, 0x18, 0b0000_0010).step }
 
-      its(:clock) { should == 3 }
+      its(:clock_m) { should == 3 }
 
       it "jumps forward" do
         cpu.pc.should == 0x05
@@ -20,7 +20,7 @@ describe Mimey::CPU do
     context "when n is negative" do
       before { cpu.load_with(0x00, 0x00, 0x18, 0b1111_1101).step }
 
-      its(:clock) { should == 3 }
+      its(:clock_m) { should == 3 }
 
       it "jumps back" do
         cpu.pc.should == 0x00
@@ -46,7 +46,7 @@ describe Mimey::CPU do
 
       cpu.pc.should == 0x05
       cpu.z_flag.should be_true
-      cpu.clock.should == 3
+      cpu.clock_m.should == 3
     end
 
     it "should add n to current address and jump to it if the flag is unset and cc is unset" do
@@ -56,7 +56,7 @@ describe Mimey::CPU do
 
       cpu.pc.should == 0x05
       cpu.z_flag.should be_false
-      cpu.clock.should == 3
+      cpu.clock_m.should == 3
     end
 
     it "should continue if the flag is set and cc is unset" do
@@ -65,7 +65,7 @@ describe Mimey::CPU do
       cpu.load_with(0x00, 0x00, 0x28, 0b0000_0010).step
 
       cpu.pc.should == 0x04
-      cpu.clock.should == 2
+      cpu.clock_m.should == 2
     end
 
     it "should continue if the flag is unset and cc is set" do
@@ -75,7 +75,7 @@ describe Mimey::CPU do
 
       cpu.pc.should == 0x04
       cpu.z_flag.should be_true
-      cpu.clock.should == 2
+      cpu.clock_m.should == 2
     end
 
     it "should jump back if n is negative and the flag is set and cc is set" do
@@ -85,7 +85,7 @@ describe Mimey::CPU do
 
       cpu.pc.should == 0x00
       cpu.z_flag.should be_true
-      cpu.clock.should == 3
+      cpu.clock_m.should == 3
     end
 
     it "should jump back if n is negative and the flag is unset and cc is unset" do
@@ -94,7 +94,7 @@ describe Mimey::CPU do
       cpu.load_with(0x00, 0x00, 0x20, 0b1111_1101).step
 
       cpu.pc.should == 0x00
-      cpu.clock.should == 3
+      cpu.clock_m.should == 3
     end
   end
 end

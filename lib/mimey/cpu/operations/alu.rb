@@ -7,7 +7,7 @@ module Mimey
       define_method(method_name) do
         value = send "#{r}"
         send "#{r}=", (value + 1) & 0xFFFF
-        @clock += 2
+        @r_m = 1
       end
     end
 
@@ -25,7 +25,8 @@ module Mimey
         @f &= C_FLAG
         @f |= Z_FLAG  if new_value == 0x00
         @f |= H_FLAG  if (new_value & 0x0F) == 0x00
-        @clock += 1
+        @r_m = 1
+        @r_t = 4
       end
     end
 
@@ -44,7 +45,8 @@ module Mimey
         @f |= N_FLAG
         @f |= Z_FLAG  if new_value == 0x00
         @f |= H_FLAG  if (new_value & 0x0F) == 0x0F
-        @clock += 1
+        @r_m = 1
+        @r_t = 4
       end
     end
 
@@ -58,7 +60,7 @@ module Mimey
         @f |= H_FLAG  if (hl & 0x0FFF) + (to_add & 0x0FFF) > 0x0FFF
         @f |= C_FLAG  if sum > 0xFFFF
         self.hl = sum & 0xFFFF
-        @clock += 2
+        @r_m = 3
       end
     end
 
@@ -69,7 +71,7 @@ module Mimey
       define_method(method_name) do
         value = send "#{r}"
         send "#{r}=", (value - 1) & 0xFFFF
-        @clock += 2
+        @r_m = 1
       end
     end
 
@@ -77,7 +79,7 @@ module Mimey
     def cpl
       @a = ~@a & 0xFF
       @f |= (N_FLAG + H_FLAG)
-      @clock += 1
+      @r_m = 1
     end
 
     # CCF. Sets the C flag into its complement, resets the H and N flags.
@@ -85,14 +87,14 @@ module Mimey
       val = @f
       @f &= Z_FLAG
       @f |= C_FLAG  unless (val & C_FLAG) == C_FLAG
-      @clock += 1
+      @r_m = 1
     end
 
     # CCF. Sets the C flag, resets the H and N flags.
     def scf
       @f &= Z_FLAG
       @f |= C_FLAG
-      @clock += 1
+      @r_m = 1
     end
 
     # ADD A,R operations. Add R 8 bits register to 8 bits A register
@@ -105,7 +107,7 @@ module Mimey
       define_method(method_name) do
         value = instance_variable_get "@#{r}"
         add_to_a value
-        @clock += 1
+        @r_m = 1
       end
     end
 
@@ -117,7 +119,7 @@ module Mimey
     def add_a_mhl
       value = @mmu[hl]
       add_to_a value
-      @clock += 2
+      @r_m = 2
     end
 
     # ADD A,(HL). Adds a 8 bit value to 8 bits A register
@@ -128,7 +130,7 @@ module Mimey
     def add_a_n
       value = next_byte
       add_to_a value
-      @clock += 2
+      @r_m = 2
     end
 
     # ADC A,R operations. Add R 8 bits register and the C (carry) flag to 8 bits A register
@@ -141,7 +143,7 @@ module Mimey
       define_method(method_name) do
         value = instance_variable_get("@#{r}") + ((@f & C_FLAG) >> 4)
         add_to_a value
-        @clock += 1
+        @r_m = 1
       end
     end
 
@@ -153,7 +155,7 @@ module Mimey
     def adc_a_mhl
       value = @mmu[hl] + ((@f & C_FLAG) >> 4)
       add_to_a value
-      @clock += 2
+      @r_m = 2
     end
 
     # ADC A,n. Adds a 8 bit value and the C (carry) flag to 8 bits A register
@@ -164,7 +166,7 @@ module Mimey
     def adc_a_n
       value = next_byte + ((@f & C_FLAG) >> 4)
       add_to_a value
-      @clock += 2
+      @r_m = 2
     end
 
     # Adds a value to the A register
@@ -185,7 +187,7 @@ module Mimey
       define_method(method_name) do
         value = instance_variable_get "@#{r}"
         and_to_a value
-        @clock += 1
+        @r_m = 1
       end
     end
 
@@ -195,7 +197,7 @@ module Mimey
     def and_mhl
       value = @mmu[hl]
       and_to_a value
-      @clock += 2
+      @r_m = 2
     end
 
     # AND N. Does a logical AND between A and a 8 bit value and set the result in A
@@ -204,7 +206,7 @@ module Mimey
     def and_n
       value = next_byte
       and_to_a value
-      @clock += 2
+      @r_m = 2
     end
 
     # Does a logical AND to the A register
@@ -223,7 +225,7 @@ module Mimey
       define_method(method_name) do
         value = instance_variable_get "@#{r}"
         xor_to_a value
-        @clock += 1
+        @r_m = 1
       end
     end
 
@@ -233,7 +235,7 @@ module Mimey
     def xor_mhl
       value = @mmu[hl]
       xor_to_a value
-      @clock += 2
+      @r_m = 2
     end
 
     # XOR N. Does a logical XOR between A and a 8 bit value and set the result in A
@@ -242,7 +244,7 @@ module Mimey
     def xor_n
       value = next_byte
       xor_to_a value
-      @clock += 2
+      @r_m = 2
     end
 
     # Does a logical XOR to the A register
@@ -260,7 +262,7 @@ module Mimey
       define_method(method_name) do
         value = instance_variable_get "@#{r}"
         or_to_a value
-        @clock += 1
+        @r_m = 1
       end
     end
 
@@ -270,7 +272,7 @@ module Mimey
     def or_mhl
       value = @mmu[hl]
       or_to_a value
-      @clock += 2
+      @r_m = 2
     end
 
     # OR N. Does a logical OR between A and a 8 bit value and set the result in A
@@ -279,7 +281,7 @@ module Mimey
     def or_n
       value = next_byte
       or_to_a value
-      @clock += 2
+      @r_m = 2
     end
 
     # Does a logical XOR to the A register
@@ -299,7 +301,7 @@ module Mimey
       define_method(method_name) do
         value = instance_variable_get "@#{r}"
         sub_to_a value
-        @clock += 1
+        @r_m = 1
       end
     end
 

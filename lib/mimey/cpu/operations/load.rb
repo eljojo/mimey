@@ -31,9 +31,11 @@ module Mimey
     end
 
     # LD (NN),SP. Loads the 16 bits SP register into 16 bits memory direction NN
+    # Also reffered to as LDmmSP
+    # NOTE: Is the implementation of this defined/needed anywhere?
     def ld_mnn_sp
       @mmu.word[next_word] = sp
-      @clock += 5
+      @r_m = 5
     end
 
     # LD A,(RR) operations. Loads the memory pointed by RR register
@@ -82,10 +84,11 @@ module Mimey
     end
 
     # LDI (HL),A. Loads the A register into the memory pointed by HL, and then increments HL
+    # also called LDHLIA
     def ldi_mhl_a
       @mmu[hl] = @a
       self.hl = (hl + 1) & 0xFFFF
-      @clock += 2
+      @r_m = 2
     end
 
     # LDI A,(HL). Loads the memory pointed by HL into the A register, and then increments HL

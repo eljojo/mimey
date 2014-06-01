@@ -6,7 +6,7 @@ module Mimey
       @f &= C_FLAG
       @f |= C_FLAG  if (@a & 0x80) == 0x80
       @a = ((@a << 1) | (@a >> 7)) & 0xFF
-      @clock += 1
+      @r_m = 1
     end
 
     # RRCA. Rotates to the left the A register, loads the bit 0 into the C flag
@@ -15,7 +15,7 @@ module Mimey
       @f &= C_FLAG
       @f |= C_FLAG  if (@a & 0x01) == 0x01
       @a = ((@a >> 1) | ((@a & 0x01) << 7)) & 0xFF
-      @clock += 1
+      @r_m = 1
     end
   end
 end

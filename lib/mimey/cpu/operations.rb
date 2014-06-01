@@ -8,7 +8,7 @@ module Mimey
   class CPU
     # NOP, opcode 0x00. Does nothing
     def nop
-      @clock += 1
+      @r_m = 1
     end
 
     # Operations array, indexes methods names by opcode

@@ -25,7 +25,7 @@ describe Mimey::CPU do
 
       cpu.bc.should == 0xABCD
       cpu.pc.should == 0x0003
-      cpu.clock.should == 3
+      cpu.clock_m.should == 3
     end
   end
 
@@ -53,7 +53,7 @@ describe Mimey::CPU do
 
       cpu.mmu[0xCAFE].should == 0xAB
       cpu.pc.should == 0x0001
-      cpu.clock.should == 2
+      cpu.clock_m.should == 2
     end
   end
 
@@ -81,7 +81,7 @@ describe Mimey::CPU do
 
       cpu.b.should == 0xAB
       cpu.pc.should == 0x0002
-      cpu.clock.should == 2
+      cpu.clock_m.should == 2
     end
   end
 
@@ -96,7 +96,7 @@ describe Mimey::CPU do
 
     cpu.mmu.word[0xCAFE].should == 0xABCD
     cpu.pc.should == 0x0003
-    cpu.clock.should == 5
+    cpu.clock_m.should == 5
   end
 
 
@@ -125,7 +125,7 @@ describe Mimey::CPU do
 
       cpu.a.should == 0xAB
       cpu.pc.should == 0x0001
-      cpu.clock.should == 2
+      cpu.clock_m.should == 2
     end
   end
 
@@ -172,7 +172,7 @@ describe Mimey::CPU do
       cpu.b.should == 0xAB
       cpu.c.should == 0xAB
       cpu.pc.should == 0x0001
-      cpu.clock.should == 1
+      cpu.clock_m.should == 1
     end
   end
 
@@ -202,7 +202,7 @@ describe Mimey::CPU do
       cpu.b.should == 0xAB
       cpu.hl.should == 0xCAFE
       cpu.pc.should == 0x0001
-      cpu.clock.should == 2
+      cpu.clock_m.should == 2
     end
   end
 
@@ -232,7 +232,7 @@ describe Mimey::CPU do
       cpu.b.should == 0xAB
       cpu.hl.should == 0xCAFE
       cpu.pc.should == 0x0001
-      cpu.clock.should == 2
+      cpu.clock_m.should == 2
     end
   end
 
@@ -249,7 +249,7 @@ describe Mimey::CPU do
     cpu.hl.should == 0xCAFE
     cpu.a.should == 0xAB
     cpu.pc.should == 0x0001
-    cpu.clock.should == 2
+    cpu.clock_m.should == 2
   end
 
   it "must have a LDI A,(HL) operation with opcode 0x32 that loads the memory pointed by HL into the A register, and then increments HL" do
@@ -266,7 +266,7 @@ describe Mimey::CPU do
     cpu.hl.should == 0xCAFE
     cpu.a.should == 0xAB
     cpu.pc.should == 0x0001
-    cpu.clock.should == 2
+    cpu.clock_m.should == 2
   end
 
   it "must have a LDD (HL),A operation with opcode 0x2A that loads the A register into the memory pointed by HL, and then decrements HL" do
@@ -282,7 +282,7 @@ describe Mimey::CPU do
     cpu.hl.should == 0xCAFE
     cpu.a.should == 0xAB
     cpu.pc.should == 0x0001
-    cpu.clock.should == 2
+    cpu.clock_m.should == 2
   end
 
   it "must have a LDD A,(HL) operation with opcode 0x3A that loads the memory pointed by HL into the A register, and then decrements HL" do
@@ -299,7 +299,7 @@ describe Mimey::CPU do
     cpu.hl.should == 0xCAFE
     cpu.a.should == 0xAB
     cpu.pc.should == 0x0001
-    cpu.clock.should == 2
+    cpu.clock_m.should == 2
   end
 
   it "must have a LD (HL),n operation with opcode 0x36 that loads a 8 bit number into the memory pointed by HL" do
@@ -314,7 +314,7 @@ describe Mimey::CPU do
     cpu.mmu[0xCAFE].should == 0xAB
     cpu.hl.should == 0xCAFE
     cpu.pc.should == 0x0002
-    cpu.clock.should == 3
+    cpu.clock_m.should == 3
   end
 
   pending "implements LD_mma correctly"

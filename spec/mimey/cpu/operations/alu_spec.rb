@@ -26,7 +26,7 @@ describe Mimey::CPU do
       cpu.bc.should == 0x0001
       cpu.pc.should == 0x0001
       cpu.should have_only_flags()
-      cpu.clock.should == 2
+      cpu.clock_m.should == 2
     end
 
     it "should let in 0x0000 a register with 0xFFFF" do
@@ -36,7 +36,7 @@ describe Mimey::CPU do
 
       cpu.should have_only_registers(pc:0x0001)
       cpu.should have_only_flags()
-      cpu.clock.should == 2
+      cpu.clock_m.should == 2
     end
   end
 
@@ -60,7 +60,7 @@ describe Mimey::CPU do
 
       cpu.should have_only_registers(b:0x01, pc:0x0001)
       cpu.should have_only_flags()
-      cpu.clock.should == 1
+      cpu.clock_m.should == 1
     end
 
     it "should set H flag if current value is 0x0F" do
@@ -70,7 +70,7 @@ describe Mimey::CPU do
 
       cpu.should have_only_registers(b:0x10, pc:0x0001)
       cpu.should have_only_flags(:h)
-      cpu.clock.should == 1
+      cpu.clock_m.should == 1
     end
 
     it "should let the register in 0x00 and set Z and H flags if current value is 0xFF" do
@@ -80,7 +80,7 @@ describe Mimey::CPU do
 
       cpu.should have_only_registers(pc:0x0001)
       cpu.should have_only_flags(:z, :h)
-      cpu.clock.should == 1
+      cpu.clock_m.should == 1
     end
 
     it "must not affect the C flag" do
@@ -90,7 +90,7 @@ describe Mimey::CPU do
 
       cpu.should have_only_registers(b:0x01, pc:0x0001)
       cpu.should have_only_flags(:c)
-      cpu.clock.should == 1
+      cpu.clock_m.should == 1
     end
   end
 
@@ -115,7 +115,7 @@ describe Mimey::CPU do
       cpu.should have_only_registers(pc:0x0001)
       cpu.should have_only_flags(:z, :n)
 
-      cpu.clock.should == 1
+      cpu.clock_m.should == 1
     end
 
     it "should set N and H flags if current value is 0x10" do
@@ -125,7 +125,7 @@ describe Mimey::CPU do
 
       cpu.should have_only_registers(b:0x0F, pc:0x0001)
       cpu.should have_only_flags(:n, :h)
-      cpu.clock.should == 1
+      cpu.clock_m.should == 1
     end
 
     it "should set N flags if current value is 0xFF" do
@@ -135,7 +135,7 @@ describe Mimey::CPU do
 
       cpu.should have_only_registers(b:0xFE, pc:0x0001)
       cpu.should have_only_flags(:n)
-      cpu.clock.should == 1
+      cpu.clock_m.should == 1
     end
 
     it "should let the register in 0xFF and set Z and H flags if current value is 0x00" do
@@ -145,7 +145,7 @@ describe Mimey::CPU do
 
       cpu.should have_only_registers(b:0xFF, pc:0x0001)
       cpu.should have_only_flags(:n, :h)
-      cpu.clock.should == 1
+      cpu.clock_m.should == 1
     end
 
     it "must not affect the C flag" do
@@ -155,7 +155,7 @@ describe Mimey::CPU do
 
       cpu.should have_only_registers(pc:0x0001)
       cpu.should have_only_flags(:z, :n, :c)
-      cpu.clock.should == 1
+      cpu.clock_m.should == 1
     end
   end
 
@@ -184,7 +184,7 @@ describe Mimey::CPU do
       cpu.hl.should == 0xACDC
       cpu.pc.should == 0x0001
       cpu.should have_only_flags()
-      cpu.clock.should == 2
+      cpu.clock_m.should == 2
     end
 
     it "should set H flag if current value is of the form 0xnFFF and the value to is not of the form 0xn000" do
@@ -199,7 +199,7 @@ describe Mimey::CPU do
       cpu.hl.should == 0x1000
       cpu.pc.should == 0x0001
       cpu.should have_only_flags(:h)
-      cpu.clock.should == 2
+      cpu.clock_m.should == 2
     end
 
     it "should not set H flag if current value is of the form 0xnFFF and the value to add is of the form 0xn000" do
@@ -214,7 +214,7 @@ describe Mimey::CPU do
       cpu.hl.should == 0x1FFF
       cpu.pc.should == 0x0001
       cpu.should have_only_flags()
-      cpu.clock.should == 2
+      cpu.clock_m.should == 2
     end
 
     it "should set H and C flags if sum overflows" do
@@ -229,7 +229,7 @@ describe Mimey::CPU do
       cpu.hl.should == 0x0000
       cpu.pc.should == 0x0001
       cpu.should have_only_flags(:h, :c)
-      cpu.clock.should == 2
+      cpu.clock_m.should == 2
     end
 
     it "must not affect the Z flag" do
@@ -244,7 +244,7 @@ describe Mimey::CPU do
       cpu.hl.should == 0xABCD
       cpu.pc.should == 0x0001
       cpu.should have_only_flags(:z)
-      cpu.clock.should == 2
+      cpu.clock_m.should == 2
     end
   end
 
@@ -268,7 +268,7 @@ describe Mimey::CPU do
 
       cpu.should have_only_registers(pc:0x0001)
       cpu.should have_only_flags()
-      cpu.clock.should == 2
+      cpu.clock_m.should == 2
     end
 
     it "should let in 0xFFFF a register with 0x0000" do
@@ -283,7 +283,7 @@ describe Mimey::CPU do
       cpu.bc.should == 0xFFFF
       cpu.pc.should == 0x0001
       cpu.should have_only_flags()
-      cpu.clock.should == 2
+      cpu.clock_m.should == 2
     end
   end
 
@@ -295,7 +295,7 @@ describe Mimey::CPU do
 
       cpu.should have_only_registers(a:0b0101_0101, pc:0x0001)
       cpu.should have_only_flags(:n, :h)
-      cpu.clock.should == 1
+      cpu.clock_m.should == 1
     end
 
     it "should not affect the Z and C flags, and set N and H flags" do
@@ -305,7 +305,7 @@ describe Mimey::CPU do
 
       cpu.should have_only_registers(a:0b0101_0101, pc:0x0001)
       cpu.should have_only_flags(:z, :n, :h, :c)
-      cpu.clock.should == 1
+      cpu.clock_m.should == 1
     end
   end
 
@@ -317,7 +317,7 @@ describe Mimey::CPU do
 
       cpu.should have_only_registers(pc:0x0001)
       cpu.should have_only_flags(:c)
-      cpu.clock.should == 1
+      cpu.clock_m.should == 1
     end
 
     it "must reset the C flag if its set" do
@@ -327,7 +327,7 @@ describe Mimey::CPU do
 
       cpu.should have_only_registers(pc:0x0001)
       cpu.should have_only_flags()
-      cpu.clock.should == 1
+      cpu.clock_m.should == 1
     end
 
     it "should not affect the Z flag, and reset N and H flags" do
@@ -337,7 +337,7 @@ describe Mimey::CPU do
 
       cpu.should have_only_registers(pc:0x0001)
       cpu.should have_only_flags(:z, :c)
-      cpu.clock.should == 1
+      cpu.clock_m.should == 1
     end
   end
 
@@ -349,7 +349,7 @@ describe Mimey::CPU do
 
       cpu.should have_only_registers(pc:0x0001)
       cpu.should have_only_flags(:c)
-      cpu.clock.should == 1
+      cpu.clock_m.should == 1
     end
 
     it "should not affect the Z flag, and reset N and H flags" do
@@ -359,7 +359,7 @@ describe Mimey::CPU do
 
       cpu.should have_only_registers(pc:0x0001)
       cpu.should have_only_flags(:z, :c)
-      cpu.clock.should == 1
+      cpu.clock_m.should == 1
     end
   end
 
@@ -383,7 +383,7 @@ describe Mimey::CPU do
 
       cpu.should have_only_registers(a:0xAC, b:0xAC, pc:0x0001)
       cpu.should have_only_flags()
-      cpu.clock.should == 1
+      cpu.clock_m.should == 1
     end
 
     it "should set H flag if current value is of the form 0xnF and the value to add is not of the form 0xn0" do
@@ -393,7 +393,7 @@ describe Mimey::CPU do
 
       cpu.should have_only_registers(a:0x20, b:0x01, pc:0x0001)
       cpu.should have_only_flags(:h)
-      cpu.clock.should == 1
+      cpu.clock_m.should == 1
     end
 
     it "should not set H flag if current value is of the form 0xnF and the value to add is of the form 0xn0" do
@@ -403,7 +403,7 @@ describe Mimey::CPU do
 
       cpu.should have_only_registers(a:0x2F, b:0x10, pc:0x0001)
       cpu.should have_only_flags()
-      cpu.clock.should == 1
+      cpu.clock_m.should == 1
     end
 
     it "should set H and C flags if sum overflows" do
@@ -413,7 +413,7 @@ describe Mimey::CPU do
 
       cpu.should have_only_registers(a:0x01, b:0x02, pc:0x0001)
       cpu.should have_only_flags(:h, :c)
-      cpu.clock.should == 1
+      cpu.clock_m.should == 1
     end
 
     it "must set the Z flag if the result is 0" do
@@ -423,7 +423,7 @@ describe Mimey::CPU do
 
       cpu.should have_only_registers(a:0x00, b:0x01, pc:0x0001)
       cpu.should have_only_flags(:z, :h, :c)
-      cpu.clock.should == 1
+      cpu.clock_m.should == 1
     end
   end
 
@@ -437,7 +437,7 @@ describe Mimey::CPU do
       cpu.should have_only_registers(a:0xAC, h:0xCA, l:0xFE, pc:0x0001)
       cpu.should have_only_flags()
       cpu.mmu[0xCAFE].should == 0xAC
-      cpu.clock.should == 2
+      cpu.clock_m.should == 2
     end
 
     it "should set H flag if current value is of the form 0xnF and the value to add is not of the form 0xn0" do
@@ -449,7 +449,7 @@ describe Mimey::CPU do
       cpu.should have_only_registers(a:0x20, h:0xCA, l:0xFE, pc:0x0001)
       cpu.should have_only_flags(:h)
       cpu.mmu[0xCAFE].should == 0x01
-      cpu.clock.should == 2
+      cpu.clock_m.should == 2
     end
 
     it "should not set H flag if current value is of the form 0xnF and the value to add is of the form 0xn0" do
@@ -461,7 +461,7 @@ describe Mimey::CPU do
       cpu.should have_only_registers(a:0x2F, h:0xCA, l:0xFE, pc:0x0001)
       cpu.should have_only_flags()
       cpu.mmu[0xCAFE].should == 0x10
-      cpu.clock.should == 2
+      cpu.clock_m.should == 2
     end
 
     it "should set H and C flags if sum overflows" do
@@ -473,7 +473,7 @@ describe Mimey::CPU do
       cpu.should have_only_registers(a:0x01, h:0xCA, l:0xFE, pc:0x0001)
       cpu.should have_only_flags(:h, :c)
       cpu.mmu[0xCAFE].should == 0x02
-      cpu.clock.should == 2
+      cpu.clock_m.should == 2
     end
 
     it "must set the Z flag if the result is 0" do
@@ -485,7 +485,7 @@ describe Mimey::CPU do
       cpu.should have_only_registers(a:0x00, h:0xCA, l:0xFE, pc:0x0001)
       cpu.should have_only_flags(:z, :h, :c)
       cpu.mmu[0xCAFE].should == 0x01
-      cpu.clock.should == 2
+      cpu.clock_m.should == 2
     end
   end
 
@@ -497,7 +497,7 @@ describe Mimey::CPU do
 
       cpu.should have_only_registers(a:0xAC, pc:0x0002)
       cpu.should have_only_flags()
-      cpu.clock.should == 2
+      cpu.clock_m.should == 2
     end
 
     it "should set H flag if current value is of the form 0xnF and the value to add is not of the form 0xn0" do
@@ -507,7 +507,7 @@ describe Mimey::CPU do
 
       cpu.should have_only_registers(a:0x20, pc:0x0002)
       cpu.should have_only_flags(:h)
-      cpu.clock.should == 2
+      cpu.clock_m.should == 2
     end
 
     it "should not set H flag if current value is of the form 0xnF and the value to add is of the form 0xn0" do
@@ -517,7 +517,7 @@ describe Mimey::CPU do
 
       cpu.should have_only_registers(a:0x2F, pc:0x0002)
       cpu.should have_only_flags()
-      cpu.clock.should == 2
+      cpu.clock_m.should == 2
     end
 
     it "should set H and C flags if sum overflows" do
@@ -527,7 +527,7 @@ describe Mimey::CPU do
 
       cpu.should have_only_registers(a:0x01, pc:0x0002)
       cpu.should have_only_flags(:h, :c)
-      cpu.clock.should == 2
+      cpu.clock_m.should == 2
     end
 
     it "must set the Z flag if the result is 0" do
@@ -537,7 +537,7 @@ describe Mimey::CPU do
 
       cpu.should have_only_registers(a:0x00, pc:0x0002)
       cpu.should have_only_flags(:z, :h, :c)
-      cpu.clock.should == 2
+      cpu.clock_m.should == 2
     end
   end
 
@@ -561,7 +561,7 @@ describe Mimey::CPU do
 
       cpu.should have_only_registers(a:0xAC, b:0xAB, pc:0x0001)
       cpu.should have_only_flags()
-      cpu.clock.should == 1
+      cpu.clock_m.should == 1
     end
 
     it "should set H flag if current value is of the form 0xnF and the value to add is not of the form 0xn0" do
@@ -571,7 +571,7 @@ describe Mimey::CPU do
 
       cpu.should have_only_registers(a:0x20, b:0x00, pc:0x0001)
       cpu.should have_only_flags(:h)
-      cpu.clock.should == 1
+      cpu.clock_m.should == 1
     end
 
     it "should not set H flag if current value is of the form 0xnF and the value to add is of the form 0xn0" do
@@ -581,7 +581,7 @@ describe Mimey::CPU do
 
       cpu.should have_only_registers(a:0x2F, b:0x0F, pc:0x0001)
       cpu.should have_only_flags()
-      cpu.clock.should == 1
+      cpu.clock_m.should == 1
     end
 
     it "should set H and C flags if sum overflows" do
@@ -591,7 +591,7 @@ describe Mimey::CPU do
 
       cpu.should have_only_registers(a:0x01, b:0x01, pc:0x0001)
       cpu.should have_only_flags(:h, :c)
-      cpu.clock.should == 1
+      cpu.clock_m.should == 1
     end
 
     it "must set the Z flag if the result is 0" do
@@ -601,7 +601,7 @@ describe Mimey::CPU do
 
       cpu.should have_only_registers(a:0x00, b:0x00, pc:0x0001)
       cpu.should have_only_flags(:z, :h, :c)
-      cpu.clock.should == 1
+      cpu.clock_m.should == 1
     end
   end
 
@@ -615,7 +615,7 @@ describe Mimey::CPU do
       cpu.should have_only_registers(a:0xAC, h:0xCA, l:0xFE, pc:0x0001)
       cpu.should have_only_flags()
       cpu.mmu[0xCAFE].should == 0xAB
-      cpu.clock.should == 2
+      cpu.clock_m.should == 2
     end
 
     it "should set H flag if current value is of the form 0xnF and the value to add is not of the form 0xn0" do
@@ -627,7 +627,7 @@ describe Mimey::CPU do
       cpu.should have_only_registers(a:0x20, h:0xCA, l:0xFE, pc:0x0001)
       cpu.should have_only_flags(:h)
       cpu.mmu[0xCAFE].should == 0x00
-      cpu.clock.should == 2
+      cpu.clock_m.should == 2
     end
 
     it "should not set H flag if current value is of the form 0xnF and the value to add is of the form 0xn0" do
@@ -639,7 +639,7 @@ describe Mimey::CPU do
       cpu.should have_only_registers(a:0x2F, h:0xCA, l:0xFE, pc:0x0001)
       cpu.should have_only_flags()
       cpu.mmu[0xCAFE].should == 0x0F
-      cpu.clock.should == 2
+      cpu.clock_m.should == 2
     end
 
     it "should set H and C flags if sum overflows" do
@@ -651,7 +651,7 @@ describe Mimey::CPU do
       cpu.should have_only_registers(a:0x01, h:0xCA, l:0xFE, pc:0x0001)
       cpu.should have_only_flags(:h, :c)
       cpu.mmu[0xCAFE].should == 0x01
-      cpu.clock.should == 2
+      cpu.clock_m.should == 2
     end
 
     it "must set the Z flag if the result is 0" do
@@ -662,7 +662,7 @@ describe Mimey::CPU do
 
       cpu.should have_only_registers(a:0x00, h:0xCA, l:0xFE, pc:0x0001)
       cpu.should have_only_flags(:z, :h, :c)
-      cpu.clock.should == 2
+      cpu.clock_m.should == 2
     end
   end
 
@@ -674,7 +674,7 @@ describe Mimey::CPU do
 
       cpu.should have_only_registers(a:0xAC, pc:0x0002)
       cpu.should have_only_flags()
-      cpu.clock.should == 2
+      cpu.clock_m.should == 2
     end
 
     it "should set H flag if current value is of the form 0xnF and the value to add is not of the form 0xn0" do
@@ -684,7 +684,7 @@ describe Mimey::CPU do
 
       cpu.should have_only_registers(a:0x20, pc:0x0002)
       cpu.should have_only_flags(:h)
-      cpu.clock.should == 2
+      cpu.clock_m.should == 2
     end
 
     it "should not set H flag if current value is of the form 0xnF and the value to add is of the form 0xn0" do
@@ -694,7 +694,7 @@ describe Mimey::CPU do
 
       cpu.should have_only_registers(a:0x2F, pc:0x0002)
       cpu.should have_only_flags()
-      cpu.clock.should == 2
+      cpu.clock_m.should == 2
     end
 
     it "should set H and C flags if sum overflows" do
@@ -704,7 +704,7 @@ describe Mimey::CPU do
 
       cpu.should have_only_registers(a:0x01, pc:0x0002)
       cpu.should have_only_flags(:h, :c)
-      cpu.clock.should == 2
+      cpu.clock_m.should == 2
     end
 
     it "must set the Z flag if the result is 0" do
@@ -714,7 +714,7 @@ describe Mimey::CPU do
 
       cpu.should have_only_registers(a:0x00, pc:0x0002)
       cpu.should have_only_flags(:z, :h, :c)
-      cpu.clock.should == 2
+      cpu.clock_m.should == 2
     end
   end
 
@@ -738,7 +738,7 @@ describe Mimey::CPU do
 
       cpu.should have_only_registers(a:0b1010_0000, b:0b1010_1010, pc:0x0001)
       cpu.should have_only_flags(:h)
-      cpu.clock.should == 1
+      cpu.clock_m.should == 1
     end
 
     it "should set the Z flag it the result is 0x00" do
@@ -748,7 +748,7 @@ describe Mimey::CPU do
 
       cpu.should have_only_registers(a:0b0000_0000, b:0b1010_1010, pc:0x0001)
       cpu.should have_only_flags(:z, :h)
-      cpu.clock.should == 1
+      cpu.clock_m.should == 1
     end
   end
 
@@ -762,7 +762,7 @@ describe Mimey::CPU do
       cpu.should have_only_registers(a:0b1010_0000, h:0xCA, l:0xFE, pc:0x0001)
       cpu.should have_only_flags(:h)
       cpu.mmu[0xCAFE].should == 0b1010_1010
-      cpu.clock.should == 2
+      cpu.clock_m.should == 2
     end
 
     it "should set the Z flag it the result is 0x00" do
@@ -774,7 +774,7 @@ describe Mimey::CPU do
       cpu.should have_only_registers(a:0b0000_0000, h:0xCA, l:0xFE, pc:0x0001)
       cpu.should have_only_flags(:z, :h)
       cpu.mmu[0xCAFE].should == 0b1010_1010
-      cpu.clock.should == 2
+      cpu.clock_m.should == 2
     end
   end
 
@@ -786,7 +786,7 @@ describe Mimey::CPU do
 
       cpu.should have_only_registers(a:0b1010_0000, pc:0x0002)
       cpu.should have_only_flags(:h)
-      cpu.clock.should == 2
+      cpu.clock_m.should == 2
     end
 
     it "should set the Z flag it the result is 0x00" do
@@ -796,7 +796,7 @@ describe Mimey::CPU do
 
       cpu.should have_only_registers(a:0b0000_0000, pc:0x0002)
       cpu.should have_only_flags(:z, :h)
-      cpu.clock.should == 2
+      cpu.clock_m.should == 2
     end
   end
 
@@ -820,7 +820,7 @@ describe Mimey::CPU do
 
       cpu.should have_only_registers(a:0b0101_1010, b:0b1010_1010, pc:0x0001)
       cpu.should have_only_flags()
-      cpu.clock.should == 1
+      cpu.clock_m.should == 1
     end
 
     it "should set the Z flag it the result is 0x00" do
@@ -830,7 +830,7 @@ describe Mimey::CPU do
 
       cpu.should have_only_registers(a:0b0000_0000, b:0b0101_0101, pc:0x0001)
       cpu.should have_only_flags(:z)
-      cpu.clock.should == 1
+      cpu.clock_m.should == 1
     end
   end
 
@@ -844,7 +844,7 @@ describe Mimey::CPU do
       cpu.should have_only_registers(a:0b0101_1010, h:0xCA, l:0xFE, pc:0x0001)
       cpu.should have_only_flags()
       cpu.mmu[0xCAFE].should == 0b1010_1010
-      cpu.clock.should == 2
+      cpu.clock_m.should == 2
     end
 
     it "should set the Z flag it the result is 0x00" do
@@ -856,7 +856,7 @@ describe Mimey::CPU do
       cpu.should have_only_registers(a:0b0000_0000, h:0xCA, l:0xFE, pc:0x0001)
       cpu.should have_only_flags(:z)
       cpu.mmu[0xCAFE].should == 0b0101_0101
-      cpu.clock.should == 2
+      cpu.clock_m.should == 2
     end
   end
 
@@ -868,7 +868,7 @@ describe Mimey::CPU do
 
       cpu.should have_only_registers(a:0b0101_1010, pc:0x0002)
       cpu.should have_only_flags()
-      cpu.clock.should == 2
+      cpu.clock_m.should == 2
     end
 
     it "should set the Z flag it the result is 0x00" do
@@ -878,7 +878,7 @@ describe Mimey::CPU do
 
       cpu.should have_only_registers(a:0b0000_0000, pc:0x0002)
       cpu.should have_only_flags(:z)
-      cpu.clock.should == 2
+      cpu.clock_m.should == 2
     end
   end
 
@@ -902,7 +902,7 @@ describe Mimey::CPU do
 
       cpu.should have_only_registers(a:0b1111_1010, b:0b1010_1010, pc:0x0001)
       cpu.should have_only_flags()
-      cpu.clock.should == 1
+      cpu.clock_m.should == 1
     end
 
     it "should set the Z flag it the result is 0x00" do
@@ -912,7 +912,7 @@ describe Mimey::CPU do
 
       cpu.should have_only_registers(a:0b0000_0000, b:0b0000_0000, pc:0x0001)
       cpu.should have_only_flags(:z)
-      cpu.clock.should == 1
+      cpu.clock_m.should == 1
     end
   end
 
@@ -926,7 +926,7 @@ describe Mimey::CPU do
       cpu.should have_only_registers(a:0b1111_1010, h:0xCA, l:0xFE, pc:0x0001)
       cpu.should have_only_flags()
       cpu.mmu[0xCAFE].should == 0b1010_1010
-      cpu.clock.should == 2
+      cpu.clock_m.should == 2
     end
 
     it "should set the Z flag it the result is 0x00" do
@@ -938,7 +938,7 @@ describe Mimey::CPU do
       cpu.should have_only_registers(a:0b0000_0000, h:0xCA, l:0xFE, pc:0x0001)
       cpu.should have_only_flags(:z)
       cpu.mmu[0xCAFE].should == 0b0000_0000
-      cpu.clock.should == 2
+      cpu.clock_m.should == 2
     end
   end
 
@@ -950,7 +950,7 @@ describe Mimey::CPU do
 
       cpu.should have_only_registers(a:0b1111_1010, pc:0x0002)
       cpu.should have_only_flags()
-      cpu.clock.should == 2
+      cpu.clock_m.should == 2
     end
 
     it "should set the Z flag it the result is 0x00" do
@@ -960,7 +960,7 @@ describe Mimey::CPU do
 
       cpu.should have_only_registers(a:0b0000_0000, pc:0x0002)
       cpu.should have_only_flags(:z)
-      cpu.clock.should == 2
+      cpu.clock_m.should == 2
     end
   end
 
@@ -984,7 +984,7 @@ describe Mimey::CPU do
 
       cpu.should have_only_registers(b:0xAC, pc:0x0001)
       cpu.should have_only_flags(:z, :n)
-      cpu.clock.should == 1
+      cpu.clock_m.should == 1
     end
 
     it "should set H flag if current value is of the form 0xn0 and the value to sub of the form 0xnF" do
@@ -994,7 +994,7 @@ describe Mimey::CPU do
 
       cpu.should have_only_registers(a:0xF1, b:0x1F, pc:0x0001)
       cpu.should have_only_flags(:n, :h, :c)
-      cpu.clock.should == 1
+      cpu.clock_m.should == 1
     end
 
     it "should not set H flag if current value is of the form 0xnF and the value to sub is of the form 0xn0" do
@@ -1004,7 +1004,7 @@ describe Mimey::CPU do
 
       cpu.should have_only_registers(a:0x0F, b:0x10, pc:0x0001)
       cpu.should have_only_flags(:n)
-      cpu.clock.should == 1
+      cpu.clock_m.should == 1
     end
 
     it "should set H and C flags if sub overflows" do
@@ -1014,7 +1014,7 @@ describe Mimey::CPU do
 
       cpu.should have_only_registers(a:0x03, b:0xFF, pc:0x0001)
       cpu.should have_only_flags(:n, :h, :c)
-      cpu.clock.should == 1
+      cpu.clock_m.should == 1
     end
 
     it "must set the Z flag if the result is 0" do
@@ -1024,7 +1024,7 @@ describe Mimey::CPU do
 
       cpu.should have_only_registers(b:0xCA, pc:0x0001)
       cpu.should have_only_flags(:z, :n)
-      cpu.clock.should == 1
+      cpu.clock_m.should == 1
     end
   end
 end

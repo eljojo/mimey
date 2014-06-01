@@ -11,6 +11,6 @@ describe Mimey::CPU do
     end
 
     its(:pc) { should == 0x0001 }
-    its(:clock) { should == 1 }
+    its(:clock_m) { should == 1 }
   end
 end

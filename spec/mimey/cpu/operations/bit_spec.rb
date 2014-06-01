@@ -9,7 +9,7 @@ describe Mimey::CPU do
 
     let(:options) {{ a: 0x01 }}
 
-    its(:clock) { should == 1 }
+    its(:clock_m) { should == 1 }
     its(:pc) { should == 0x0001 }
     specify { cpu.should have_only_flags }
 
@@ -30,7 +30,7 @@ describe Mimey::CPU do
 
     let(:options) {{ a: 0x02 }}
 
-    its(:clock) { should == 1 }
+    its(:clock_m) { should == 1 }
     its(:pc) { should == 0x0001 }
     specify { cpu.should have_only_flags }
 
