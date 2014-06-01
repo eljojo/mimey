@@ -2,6 +2,7 @@ module Mimey
   # his class represents the Game Boy MMU
   class GPU
     attr_reader :vram
+    attr_accessor :cpu
 
     def initialize(screen)
       @screen = screen
@@ -9,8 +10,9 @@ module Mimey
 
       reset_tileset
 
-      @mmu = nil
-      @line = nil
+      @mode = 0
+      @modeclock = 0
+      @line = 0
       @scy = nil
       @scx = nil
 
@@ -20,6 +22,7 @@ module Mimey
       @switchlcd = false
 
       @pal = []
+      @scrn = []
     end
 
     def [](addr)
@@ -29,7 +32,7 @@ module Mimey
         (@switchbg  ? 0x01 : 0x00) |
 		    (@bgmap     ? 0x08 : 0x00) |
 		    (@bgtile    ? 0x10 : 0x00) |
-		    (@switchlcd ? 0x80 : 0x00);
+		    (@switchlcd ? 0x80 : 0x00)
       # Scroll Y
       when 0xFF42
         @scy
@@ -74,9 +77,61 @@ module Mimey
     end
 
     def step
-      # TODO: This is not correct, we are using no timing
-      # that probably has to be fixed in the CPU first so we can use it here
-      @screen.render
+      @modeclock = @cpu.r_t
+
+      case @mode
+      # OAM read mode, scanline active
+      when 2
+        if @modeclock >= 80 then
+          # Enter scanline mode 3
+          @modeclock = 0
+          @mode = 3
+        end
+
+      # VRAM read mode, scanline active
+      # Treat end of mode 3 as end of scanline
+      when 3
+        if @modeclock >= 172 then
+          # Enter hblank
+          @modeclock = 0
+          @mode = 0
+
+          # Write a scanline to the framebuffer
+          self.renderscan
+        end
+
+      # Hblank
+      # After the last hblank, push the screen data to canvas
+      when 0
+        if @modeclock >= 204 then
+          @modeclock = 0
+          @line += 1
+
+          if @line == 143 then
+            # Enter vblank
+            @mode = 1
+            # @canvas.putImageData(@scrn, 0, 0)
+            p @scrn
+          else
+            @mode = 2
+          end
+        end
+
+      # Vblank (10 lines)
+      when 1
+        if @modeclock >= 456 then
+          @modeclock = 0
+          @line += 1
+
+          if @line > 153 then
+            # Restart scanning modes
+            @mode = 2
+            @line = 0
+          end
+        end
+      end
+
+      # @screen.render
     end
 
     def reset_tileset
@@ -141,14 +196,14 @@ module Mimey
         colour = @pal[@tileset[tile][y][x]]
 
         # Plot the pixel to canvas
-        # GPU._scrn.data[canvasoffs+0] = colour[0];
-        # GPU._scrn.data[canvasoffs+1] = colour[1];
-        # GPU._scrn.data[canvasoffs+2] = colour[2];
-        # GPU._scrn.data[canvasoffs+3] = colour[3];
+        @scrn[canvasoffs+0] = colour[0]
+        @scrn[canvasoffs+1] = colour[1]
+        @scrn[canvasoffs+2] = colour[2]
+        @scrn[canvasoffs+3] = colour[3]
         canvasoffs += 4
 
         # When this tile ends, read another
-        x++
+        x += 1
         if x == 8 then
           x = 0
           lineoffs = (lineoffs + 1) & 31

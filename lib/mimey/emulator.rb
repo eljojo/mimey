@@ -9,6 +9,7 @@ module Mimey
       @cpu = CPU.new(cpu_options)
       @gpu = GPU.new(LcdScreen.new)
       @cpu.mmu.gpu = @gpu
+      @gpu.cpu = @cpu
     end
 
     def nop_mode=(nop_mode)

@@ -184,7 +184,7 @@ module Mimey
       end
       i += @sp
       self.hl = i
-      @r_m = 3;
+      @r_m = 3
     end
   end
 end
