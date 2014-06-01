@@ -122,7 +122,7 @@ module Mimey
       # 0xC0
       :_C0,        :pop_bc,     :_C2,       :_C3,         :_C4,
       # 0xC5
-      :push_bc,    :add_a_n,    :_C7,       :_C8,         :_C9,
+      :push_bc,    :add_a_n,    :_C7,       :_C8,         :ret,
       # 0xCA
       :_CA,        :_CB,        :_CC,       :_CD,         :adc_a_n,
       # 0xCF
@@ -153,7 +153,7 @@ module Mimey
       # 0xFA
       :ld_amm,     :_FB,        :_FC,       :_FD,         :_FE,
       # 0xFF
-      :_FF
+      :rst_38
     ].freeze
   end
 end

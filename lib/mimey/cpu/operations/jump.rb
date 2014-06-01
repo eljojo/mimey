@@ -27,5 +27,20 @@ module Mimey
     def as_signed_byte(value)
       [ value ].pack("c").unpack("c").first
     end
+
+    # RET
+    def ret
+      @pc = next_word
+      @r_m = 3
+      @r_t = 12
+    end
+
+    def rst_38
+      @sp -= 2
+      @mmu.word[@sp] = @pc
+      @pc = 0x38
+      @r_m = 3
+      @r_t = 12
+    end
   end
 end
