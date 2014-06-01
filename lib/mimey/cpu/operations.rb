@@ -41,9 +41,9 @@ module Mimey
       # 0xD0
       :_D0, :_D1, :_D2, :_D3, :_D4, :_D5, :_D6, :_D7, :_D8, :_D9, :_DA, :_DB, :_DC, :_DD, :_DE, :_DF,
       # 0xE0
-      :_E0, :_E1, :_E2, :_E3, :_E4, :_E5, :and_n, :_E7, :_E8, :_E9, :_EA, :_EB, :_EC, :_ED, :xor_n, :_EF,
+      :ld_io_n_a, :_E1, :ld_ioca, :_E3, :_E4, :_E5, :and_n, :_E7, :_E8, :_E9, :ld_mma, :_EB, :_EC, :_ED, :xor_n, :_EF,
       # 0xF0
-      :_F0, :_F1, :_F2, :_F3, :_F4, :_F5, :or_n, :_F7, :_F8, :_F9, :_FA, :_FB, :_FC, :_FD, :_FE, :_FF
+      :ld_aio_n, :_F1, :ld_aioc, :_F3, :_F4, :_F5, :or_n, :_F7, :_F8, :_F9, :ld_amm, :_FB, :_FC, :_FD, :_FE, :_FF
     ].freeze
   end
 end

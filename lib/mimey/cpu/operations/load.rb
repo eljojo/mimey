@@ -5,18 +5,19 @@ module Mimey
       method_name = "ld_#{r}_nn"
       define_method(method_name) do
         send "#{r}=", next_word
-        @clock += 3
+        @r_m = 3
       end
     end
 
     # LD (RR), A operations. Loads the A register into the
-    # 16 bit memory direction pointed by RR regiser
+    # 16 bit memory direction pointed by RR register
+    # NOTE: ld_mhl_a is also called :LDHLIA
     [:bc, :de, :hl].each do |r|
       method_name = "ld_m#{r}_a"
       define_method(method_name) do
         address = send "#{r}"
         @mmu[address] = @a
-        @clock += 2
+        @r_m = 2
       end
     end
 
@@ -25,7 +26,7 @@ module Mimey
       method_name = "ld_#{r}_n"
       define_method(method_name) do
         instance_variable_set "@#{r}", next_byte
-        @clock += 2
+        @r_m = 2
       end
     end
 
@@ -37,12 +38,15 @@ module Mimey
 
     # LD A,(RR) operations. Loads the memory pointed by RR register
     # into the A register
+    # NOTE: is :ld_a_hl needed?
+    #       ld_a_hl is not set in
+    #       http://imrannazar.com/content/files/jsgb-gpu-ctrl.jsgb.js
     [:bc, :de, :hl].each do |r|
       method_name = "ld_a_m#{r}"
       define_method(method_name) do
         address = send "#{r}"
         @a = @mmu[address]
-        @clock += 2
+        @r_m = 2
       end
     end
 
@@ -53,7 +57,7 @@ module Mimey
         define_method(method_name) do
           value = instance_variable_get "@#{r2}"
           instance_variable_set "@#{r1}", value
-          @clock += 1
+          @r_m = 1
         end
       end
     end
@@ -63,7 +67,7 @@ module Mimey
       method_name = "ld_#{r}_mhl"
       define_method(method_name) do
         instance_variable_set "@#{r}", @mmu[hl]
-        @clock += 2
+        @r_m = 2
       end
     end
 
@@ -73,7 +77,7 @@ module Mimey
       define_method(method_name) do
         value = instance_variable_get "@#{r}"
         @mmu[hl] = value
-        @clock += 2
+        @r_m = 2
       end
     end
 
@@ -85,30 +89,88 @@ module Mimey
     end
 
     # LDI A,(HL). Loads the memory pointed by HL into the A register, and then increments HL
+    # NOTE: ldi_a_mhl is also called LDAHLI
+    # NOTE: this implementation differs from the one found in
+    #       http://imrannazar.com/content/files/jsgb-gpu-ctrl.jsgb.js
     def ldi_a_mhl
       @a = @mmu[hl]
       self.hl = (hl + 1) & 0xFFFF
-      @clock += 2
+      @r_m = 2
     end
 
     # LDD (HL),A. Loads the A register into the memory pointed by HL, and then decrements HL
+    # NOTE: also called LDHLDA
     def ldd_mhl_a
       @mmu[hl] = @a
       self.hl = (hl - 1) & 0xFFFF
-      @clock += 2
+      @r_m = 2
     end
 
     # LDD A,(HL). Loads the memory pointed by HL into the A register, and then decrements HL
+    # NOTE: also called LDAHLD
     def ldd_a_mhl
       @a = @mmu[hl]
       self.hl = (hl - 1) & 0xFFFF
-      @clock += 2
+      @r_m = 2
     end
 
     # LD (HL),n. Loads a 8 bit number into the memory pointed by HL
     def ld_mhl_n
       @mmu[hl] = next_byte
-      @clock += 3
+      @r_m = 3
+    end
+
+    # LDmmA. Writes register A into memory pointed by next word
+    def ld_mma
+      @mmu[next_word] = @a
+      @r_m = 4
+    end
+
+    # LDAmm. Writes into register A the byte pointed by next word
+    def ld_amm
+      @a = @mmu[next_word]
+      @r_m = 4
+    end
+
+    # LDHLmm
+    # NOTE: Couldn't find this OP in the OP table
+    def ld_hlmm
+      i = next_word
+      @l = @mmu[i]
+      @h = @mmu[i + 1]
+      @r_m = 5
+    end
+
+    # LDmmHL
+    # NOTE: Couldn't find this OP in the OP table
+    def ld_mmhl
+      i = next_word
+      @mmu.word[i] = hl
+      @r_m = 5
+    end
+
+    # LDAIOn
+    def ld_aio_n
+      @a = @mmu[0xFF00 + next_byte]
+      @r_m = 3
+    end
+
+    # LDIOnA
+    def ld_io_n_a
+      @mmu.word[0xFF00 + next_byte] = @a
+      @r_m = 3
+    end
+
+    # LDAIOC
+    def ld_aioc
+      @a = @mmu[0xF00 + @c]
+      @r_m = 2
+    end
+
+    # LDIOCA
+    def ld_ioca
+      @mmu[0xFF00 + @c] = @a
+      @r_m = 2
     end
   end
 end

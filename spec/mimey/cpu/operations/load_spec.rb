@@ -316,4 +316,13 @@ describe Mimey::CPU do
     cpu.pc.should == 0x0002
     cpu.clock.should == 3
   end
+
+  pending "implements LD_mma correctly"
+  pending "implements LD_amm correctly"
+  pending "implements LD_HLmm correctly"
+  pending "implements LD_mmHL correctly"
+  pending "implements LDAIOn correctly"
+  pending "implements LDIOnA correctly"
+  pending "implements LDAIOC correctly"
+  pending "implements LDIOCA correctly"
 end

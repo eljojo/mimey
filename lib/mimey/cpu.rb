@@ -9,12 +9,19 @@ module Mimey
     attr_accessor :pc
     # 16 bit SP register (Stack pointer)
     attr_accessor :sp
-    # CPU Clock
-    attr_accessor :clock
     # MMU
     attr_accessor :mmu
     # nop-mode
     attr_accessor :nop_mode
+
+    # CPU Clock
+    attr_accessor :clock_m
+    attr_accessor :clock_t
+
+    # Clock for last instruction
+    attr_accessor :r_m
+    attr_accessor :r_t
+
 
     # Default register values
     DEFAULTS = {
@@ -44,7 +51,10 @@ module Mimey
         instance_variable_set("@#{k}", v)
       end
 
-      @clock = 0
+      @clock_m = 0
+      @clock_t = 0
+      @r_m = 0
+      @r_t = 0
       @mmu = MMU.new
     end
 
