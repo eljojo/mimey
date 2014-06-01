@@ -325,4 +325,5 @@ describe Mimey::CPU do
   pending "implements LDIOnA correctly"
   pending "implements LDAIOC correctly"
   pending "implements LDIOCA correctly"
+  pending "implements LDHLSPn correctly"
 end

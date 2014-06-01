@@ -172,5 +172,16 @@ module Mimey
       @mmu[0xFF00 + @c] = @a
       @r_m = 2
     end
+
+    # LDHLSPn
+    def ld_hlspn
+      i = next_byte
+      if i > 127 then
+        i =- (~i+1) & 255
+      end
+      i += @sp
+      self.hl = i
+      @r_m = 3;
+    end
   end
 end

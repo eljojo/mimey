@@ -43,7 +43,7 @@ module Mimey
       # 0xE0
       :ld_io_n_a, :_E1, :ld_ioca, :_E3, :_E4, :_E5, :and_n, :_E7, :_E8, :_E9, :ld_mma, :_EB, :_EC, :_ED, :xor_n, :_EF,
       # 0xF0
-      :ld_aio_n, :_F1, :ld_aioc, :_F3, :_F4, :_F5, :or_n, :_F7, :_F8, :_F9, :ld_amm, :_FB, :_FC, :_FD, :_FE, :_FF
+      :ld_aio_n, :_F1, :ld_aioc, :_F3, :_F4, :_F5, :or_n, :_F7, :ld_hlspn, :_F9, :ld_amm, :_FB, :_FC, :_FD, :_FE, :_FF
     ].freeze
   end
 end
