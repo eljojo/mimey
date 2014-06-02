@@ -24,7 +24,7 @@ module Mimey
       :rrca,
 
       # 0x10
-      :_10,        :ld_de_nn,   :ld_mde_a,  :inc_de,      :inc_d,
+      :djnzn,      :ld_de_nn,   :ld_mde_a,  :inc_de,      :inc_d,
       # 0x15
       :dec_d,      :ld_d_n,     :_17,       :jr_n,        :add_hl_de,
       # 0x1A

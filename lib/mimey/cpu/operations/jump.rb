@@ -69,5 +69,23 @@ module Mimey
         @pc += 2
       end
     end
+
+    # DJNZn
+    def djnzn
+      i = @mmu[@pc]
+
+      if i > 127 then
+        i = -((~i + 1) & 255)
+      end
+
+      @pc += 1
+      @r_m = 2
+      @b -= 1
+
+      if @b != 0x00 then
+        @pc += i
+        @r_m += 1
+      end
+    end
   end
 end
