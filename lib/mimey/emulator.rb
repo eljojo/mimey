@@ -12,10 +12,6 @@ module Mimey
       @gpu.cpu = @cpu
     end
 
-    def nop_mode=(nop_mode)
-      @cpu.nop_mode = nop_mode
-    end
-
     def load_rom(path)
       rom = File.binread(path)
       @cpu.load_with(*rom.unpack("C*"))

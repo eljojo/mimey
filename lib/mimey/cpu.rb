@@ -11,8 +11,6 @@ module Mimey
     attr_accessor :sp
     # MMU
     attr_accessor :mmu
-    # nop-mode
-    attr_accessor :nop_mode
 
     # CPU Clock
     attr_accessor :clock_m
@@ -75,10 +73,6 @@ module Mimey
     def step
       operation = OPERATIONS[next_byte]
       @last_operation = operation
-      if not self.respond_to?(operation) and !!nop_mode
-        puts "warning! we don't know how to #{operation}"
-        operation = "nop"
-      end
 
       @r_m = 0
       @r_t = 0
