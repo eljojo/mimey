@@ -135,7 +135,7 @@ module Mimey
     end
 
     def reset_tileset
-      @tileset = 384.times.map do
+      @tileset = 512.times.map do
         # each tile is 8x8
         8.times.map do
           [0,0,0,0,0,0,0,0]
