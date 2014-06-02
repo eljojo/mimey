@@ -50,5 +50,13 @@ module Mimey
       @r_m = 3
       @r_t = 12
     end
+
+    # CALLnn
+    def call_nn
+      @sp -= 2
+      @mmu.word[@sp] = @pc + 2
+      @pc = @mmu.word[@pc]
+      @r_m = 5
+    end
   end
 end

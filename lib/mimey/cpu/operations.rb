@@ -125,7 +125,7 @@ module Mimey
       # 0xC5
       :push_bc,    :add_a_n,    :_C7,       :_C8,         :ret,
       # 0xCA
-      :_CA,        :_CB,        :_CC,       :_CD,         :adc_a_n,
+      :_CA,        :_CB,        :_CC,       :call_nn,         :adc_a_n,
       # 0xCF
       :_CF,
 
