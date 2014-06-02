@@ -100,7 +100,9 @@ module Mimey
       # 0x95
       :sub_a_l,    :_96,        :sub_a_a,   :_98,         :_99,
       # 0x9A
-      :_9A,        :_9B,        :_9C,       :_9D,         :_9E, :_9F,
+      :_9A,        :_9B,        :_9C,       :_9D,         :_9E,
+      # 0x9F
+      :_9F,
 
       # 0xA0
       :and_b,      :and_c,      :and_d,     :and_e,       :and_h,
@@ -121,11 +123,11 @@ module Mimey
       :_BF,
 
       # 0xC0
-      :_C0,        :pop_bc,     :_C2,       :jp_nn,         :_C4,
+      :_C0,        :pop_bc,     :jpnz_nn,   :jp_nn,       :_C4,
       # 0xC5
       :push_bc,    :add_a_n,    :_C7,       :_C8,         :ret,
       # 0xCA
-      :_CA,        :_CB,        :_CC,       :call_nn,         :adc_a_n,
+      :_CA,        :_CB,        :_CC,       :call_nn,     :adc_a_n,
       # 0xCF
       :_CF,
 

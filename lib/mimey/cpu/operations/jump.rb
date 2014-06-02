@@ -58,5 +58,16 @@ module Mimey
       @pc = @mmu.word[@pc]
       @r_m = 5
     end
+
+    # JPNZnn
+    def jpnz_nn
+      @r_m = 3
+      if (@f & 0x80) == 0x00 then
+        @pc = @mmu.word[@pc]
+        @r_m += 1
+      else
+        @pc += 2
+      end
+    end
   end
 end
