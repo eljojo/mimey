@@ -129,7 +129,7 @@ describe Mimey::CPU do
     describe '#next_word' do
       let!(:result) { cpu.next_word }
 
-      specify { result.should == 0xABCD }
+      specify { result.should == 0xCDAB }
       its(:pc) { should == 2 }
     end
   end

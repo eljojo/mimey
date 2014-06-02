@@ -82,13 +82,13 @@ module Mimey
 
       # Reads a word
       def [](i)
-        (@mmu[i] << 8) + @mmu[i + 1]
+        @mmu[i] + (@mmu[i + 1] << 8)
       end
 
       # Writes a word
       def []=(i, n)
-        @mmu[i] = (n >> 8)
-        @mmu[i + 1] = n & 0xFF
+        @mmu[i] = n & 0xFF
+        @mmu[i + 1] = n >> 8
       end
     end
   end

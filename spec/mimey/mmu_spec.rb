@@ -56,13 +56,13 @@ describe Mimey::MMU do
     mmu[0xC000] = 0xAB
     mmu[0xC001] = 0xCD
 
-    mmu.word[0xC000].should == 0xABCD
+    mmu.word[0xC000].should == 0xCDAB
   end
 
   it 'writes words' do
     mmu.word[0xC000] = 0xABCD
 
-    mmu[0xC000].should == 0xAB
-    mmu[0xC001].should == 0xCD
+    mmu[0xC000].should == 0xCD
+    mmu[0xC001].should == 0xAB
   end
 end
