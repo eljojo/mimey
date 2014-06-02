@@ -97,7 +97,8 @@ module Mimey
 
     # prints debug information
     def debug
-      puts "op: #{@last_operation}\ta: #{a}, f: #{f}, b: #{b}, c: #{c}, d: #{d}, e: #{e}, h: #{h}, l: #{l}\tpc: #{pc}, sp: #{sp}, clock m: #{clock_m}"
+      op_index = OPERATIONS.index(@last_operation)
+      puts "op: #{@last_operation} (#{op_index})\ta: #{a}, f: #{f}, b: #{b}, c: #{c}, d: #{d}, e: #{e}, h: #{h}, l: #{l}\tpc: #{pc}, sp: #{sp}, clock m: #{clock_m}"
     end
 
     # Reads the next byte from memory and increments PC by 1

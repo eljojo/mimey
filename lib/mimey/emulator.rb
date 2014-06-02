@@ -2,7 +2,7 @@ require 'mimey/cpu/operations'
 
 module Mimey
   class Emulator
-    attr_accessor :debug_mode
+    attr_accessor :debug_mode, :step_by_step
 
     def initialize(cpu_options = {})
       cpu_options = CPU::DEFAULTS.merge(cpu_options)
@@ -22,12 +22,21 @@ module Mimey
     end
 
     def run
-      @cpu.reset
+      reset
       loop do
-        @cpu.step
-        @cpu.debug if !!debug_mode
-        @gpu.step
+        step
+        gets if step_by_step
       end
+    end
+
+    def reset
+      @cpu.reset
+    end
+
+    def step
+      @cpu.step
+      @cpu.debug if !!debug_mode
+      @gpu.step
     end
   end
 end
