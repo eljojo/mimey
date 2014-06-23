@@ -30,7 +30,7 @@ module Mimey
       # 0x1A
       :ld_a_mde,   :dec_de,     :inc_e,     :dec_e,       :ld_e_n,
       # 0x1F
-      :_1F,
+      :rra,
 
       # 0x20
       :jr_nz_n,    :ld_hl_nn,   :ldi_mhl_a, :inc_hl,      :inc_h,
@@ -147,7 +147,7 @@ module Mimey
       # 0xEA
       :ld_mma,     :_EB,        :_EC,       :_ED,         :xor_n,
       # 0xEF
-      :_EF,
+      :rst_28,
 
       # 0xF0
       :ld_aio_n,   :pop_af,     :ld_aioc,   :_F3,         :_F4,

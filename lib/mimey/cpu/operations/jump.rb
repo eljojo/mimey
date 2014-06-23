@@ -36,6 +36,14 @@ module Mimey
       @r_t = 12
     end
 
+    def rst_28
+      @sp -= 2
+      @mmu.word[@sp] = @pc
+      @pc = 0x28
+      @r_m = 3
+      @r_t = 12
+    end
+
     def rst_38
       @sp -= 2
       @mmu.word[@sp] = @pc
