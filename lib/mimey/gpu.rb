@@ -15,6 +15,8 @@ module Mimey
       @line = 0
       @scy = nil
       @scx = nil
+      @intfired = 0
+      @raster = 0
 
       @bg_map = false
       @bgtile = false
@@ -33,6 +35,10 @@ module Mimey
 		    (@bgmap     ? 0x08 : 0x00) |
 		    (@bgtile    ? 0x10 : 0x00) |
 		    (@switchlcd ? 0x80 : 0x00)
+      when 0xFF41
+        intf = @intfired
+	      @intfired = 0
+        (intf<<3) | (@line == @raster ? 4 : 0) | @mode
       # Scroll Y
       when 0xFF42
         @scy
@@ -45,20 +51,20 @@ module Mimey
       end
     end
 
-    def []=(i, n)
+    def []=(addr, val)
       case(addr)
       # LCD Control
       when 0xFF40
-        @switchbg  = ((n & 0x01) == 1)
-        @bgmap     = ((n & 0x08) == 1)
-        @bgtile    = ((n & 0x10) == 1)
-        @switchlcd = ((n & 0x80) == 1)
+        @switchbg  = ((val & 0x01) == 1)
+        @bgmap     = ((val & 0x08) == 1)
+        @bgtile    = ((val & 0x10) == 1)
+        @switchlcd = ((val & 0x80) == 1)
       # Scroll Y
       when 0xFF42
-        @scy = n
+        @scy = val
       # Scroll X
       when 0xFF43
-        @scx = n
+        @scx = val
       # Background palette
       when 0xFF47
         4.times do |i|
@@ -163,6 +169,7 @@ module Mimey
     end
 
     def renderscan
+      puts "RENDERSCANNNN\n\n\n"
       # VRAM offset for the tile map
       mapoffs = @bgmap ? 0x1C00 : 0x1800
 
