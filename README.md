@@ -96,3 +96,5 @@ is being able to run [Pokémon Red and Blue][red-blue].
 ## Licence
 
 MIT.
+
+![Happy Gameboy](https://cloud.githubusercontent.com/assets/32212/3471234/35ad7576-02c1-11e4-9ca6-a9a2480812eb.gif)
