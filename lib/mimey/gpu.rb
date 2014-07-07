@@ -10,7 +10,7 @@ module Mimey
 
       reset_tileset
 
-      @mode = 0
+      @mode = 2
       @modeclock = 0
       @line = 0
       @scy = nil
@@ -36,6 +36,11 @@ module Mimey
 		    (@bgtile    ? 0x10 : 0x00) |
 		    (@switchlcd ? 0x80 : 0x00)
       when 0xFF41
+        puts "reading 0xFF41"
+        p @intfired
+        p @line
+        p @raster
+        p @mode
         intf = @intfired
 	      @intfired = 0
         (intf<<3) | (@line == @raster ? 4 : 0) | @mode
@@ -59,6 +64,9 @@ module Mimey
         @bgmap     = ((val & 0x08) == 1)
         @bgtile    = ((val & 0x10) == 1)
         @switchlcd = ((val & 0x80) == 1)
+      when 0xFF41
+        puts "writing to 0xFF41: #{val}"
+        @ints = (val>>3) & 15
       # Scroll Y
       when 0xFF42
         @scy = val
@@ -83,12 +91,12 @@ module Mimey
     end
 
     def step
-      @modeclock = @cpu.r_t
-
+      @modeclock += @cpu.r_m
+      puts "checkline. modeclocks: #{@modeclock}, mode: #{@mode}"
       case @mode
       # OAM read mode, scanline active
       when 2
-        if @modeclock >= 80 then
+        if @modeclock >= 20 then
           # Enter scanline mode 3
           @modeclock = 0
           @mode = 3
@@ -97,30 +105,52 @@ module Mimey
       # VRAM read mode, scanline active
       # Treat end of mode 3 as end of scanline
       when 3
-        if @modeclock >= 172 then
+        if @modeclock >= 43 then
           # Enter hblank
           @modeclock = 0
           @mode = 0
 
+          if(@ints & 1) != 0x00 then
+            @intfired |= 1
+            # @MMU._if |= 2
+          end
+
           # Write a scanline to the framebuffer
-          self.renderscan
+          # self.renderscan
         end
 
       # Hblank
       # After the last hblank, push the screen data to canvas
       when 0
-        if @modeclock >= 204 then
-          @modeclock = 0
-          @line += 1
-
-          if @line == 143 then
-            # Enter vblank
+        if @modeclock >= 51 then
+          if @line == 143
             @mode = 1
-            # @canvas.putImageData(@scrn, 0, 0)
-            p @scrn
+            puts "setting modeclock to 1"
+            # GPU._canvas.putImageData(GPU._scrn, 0,0);
+            # MMU._if |= 1;
+            if (@ints & 2) != 0x00 then
+              @intfired |= 2
+              # MMU._if|=2;
+            end
           else
             @mode = 2
+            puts "setting modeclock to 2"
+            if (@ints & 4) != 0x00 then
+              @intfired |= 4
+              # MMU._if|=2;
+            end
           end
+          @line += 1
+          puts "increasing curline by 1: #{@line}"
+          if @line == @raster then
+            if (@ints & 8) != 0x00 then
+              @intfired|=8
+              # MMU._if|=2;
+            end
+          end
+          # @curscan += 640
+          @modeclock = 0
+          puts "setting modeclock to 0"
         end
 
       # Vblank (10 lines)
