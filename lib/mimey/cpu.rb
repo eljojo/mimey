@@ -20,7 +20,6 @@ module Mimey
     attr_accessor :r_m
     attr_accessor :r_t
 
-
     # Default register values
     DEFAULTS = {
       a: 0x00,
@@ -67,6 +66,7 @@ module Mimey
       self.c = 0x13
       self.e = 0xD8
       self.a = 1
+      @total_steps = 0
     end
 
     # Executes next instruction
@@ -81,6 +81,7 @@ module Mimey
 
       @clock_m += @r_m
       @clock_t += @r_t
+      @total_steps += 1
     end
 
     # Loads a program
@@ -92,7 +93,7 @@ module Mimey
     # prints debug information
     def debug
       op_index = OPERATIONS.index(@last_operation)
-      puts "op: #{@last_operation} (#{op_index})\ta: #{a}, f: #{f}, b: #{b}, c: #{c}, d: #{d}, e: #{e}, h: #{h}, l: #{l}\tpc: #{pc}, sp: #{sp}, clock m: #{clock_m}"
+      puts "step: #{@total_steps}\top: #{@last_operation} (#{op_index})\tpc: #{pc}\ta: #{a}, b: #{b}, c: #{c}, d: #{d}, e: #{e}, f: #{f}, h: #{h}, l: #{l}, hl: #{hl}\tsp: #{sp}, clock m: #{clock_m}"
     end
 
     # Reads the next byte from memory and increments PC by 1
