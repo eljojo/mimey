@@ -34,5 +34,23 @@ module Mimey
       @cpu.debug if !!debug_mode
       @gpu.step
     end
+
+    def frame
+      fclk = @cpu.clock_m + 17556
+      begin
+        step
+      end while @cpu.clock_m < fclk
+    end
+
+    def debug
+      @cpu.debug
+    end
+
+    def run_test(enum)
+      reset
+      enum.each do
+        step
+      end
+    end
   end
 end
