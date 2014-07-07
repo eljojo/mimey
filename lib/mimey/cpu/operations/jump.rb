@@ -23,6 +23,20 @@ module Mimey
       end
     end
 
+    # note: jano's implementation of JRNZn is broken
+    # by some reason this one works
+    def jr_nz_n
+      i = next_byte
+      if i > 127 then
+        i = -((~i+1)&255)
+      end
+      @r_m = 2
+      if (@f & 0x80) == 0x00 then
+        @pc += i
+        @r_m += 1
+      end
+    end
+
     # Returns the value as a signed byte
     def as_signed_byte(value)
       [ value ].pack("c").unpack("c").first
