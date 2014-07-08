@@ -2,7 +2,7 @@ require 'mimey/cpu/operations'
 
 module Mimey
   class Emulator
-    attr_accessor :debug_mode, :step_by_step
+    attr_accessor :debug_mode, :step_by_step, :step_counter
 
     def initialize(cpu_options = {})
       cpu_options = CPU::DEFAULTS.merge(cpu_options)
@@ -33,6 +33,10 @@ module Mimey
       @cpu.step
       @cpu.debug if !!debug_mode
       @gpu.step
+
+      if step_counter then
+        step_counter << @cpu.step_counter_step
+      end
     end
 
     def frame
@@ -47,7 +51,6 @@ module Mimey
     end
 
     def run_test(enum)
-      reset
       enum.each do
         step
       end

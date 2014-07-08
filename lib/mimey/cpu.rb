@@ -96,6 +96,12 @@ module Mimey
       puts "step: #{@total_steps}\top: #{@last_operation} (#{op_index})\tpc: #{pc}\ta: #{a}, b: #{b}, c: #{c}, d: #{d}, e: #{e}, f: #{f}, h: #{h}, l: #{l}, hl: #{hl}\tsp: #{sp}, clock m: #{clock_m}"
     end
 
+    def step_counter_step
+      op_index = OPERATIONS.index(@last_operation)
+      registers = StepCounter::Registers.new(a, b, c, d, e, f, h, l, pc)
+      StepCounter::Step.new(@total_steps, op_index, registers)
+    end
+
     # Reads the next byte from memory and increments PC by 1
     def next_byte
       @pc += 1

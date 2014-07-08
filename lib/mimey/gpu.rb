@@ -36,11 +36,11 @@ module Mimey
 		    (@bgtile    ? 0x10 : 0x00) |
 		    (@switchlcd ? 0x80 : 0x00)
       when 0xFF41
-        puts "reading 0xFF41"
-        p @intfired
-        p @line
-        p @raster
-        p @mode
+        # puts "reading 0xFF41"
+        # p @intfired
+        # p @line
+        # p @raster
+        # p @mode
         intf = @intfired
 	      @intfired = 0
         (intf<<3) | (@line == @raster ? 4 : 0) | @mode
@@ -65,7 +65,7 @@ module Mimey
         @bgtile    = ((val & 0x10) == 1)
         @switchlcd = ((val & 0x80) == 1)
       when 0xFF41
-        puts "writing to 0xFF41: #{val}"
+        # puts "writing to 0xFF41: #{val}"
         @ints = (val>>3) & 15
       # Scroll Y
       when 0xFF42
@@ -92,7 +92,7 @@ module Mimey
 
     def step
       @modeclock += @cpu.r_m
-      puts "checkline. modeclocks: #{@modeclock}, mode: #{@mode}"
+      # puts "checkline. modeclocks: #{@modeclock}, mode: #{@mode}"
       case @mode
       # OAM read mode, scanline active
       when 2
@@ -125,7 +125,7 @@ module Mimey
         if @modeclock >= 51 then
           if @line == 143
             @mode = 1
-            puts "setting modeclock to 1"
+            # puts "setting modeclock to 1"
             # GPU._canvas.putImageData(GPU._scrn, 0,0);
             # MMU._if |= 1;
             if (@ints & 2) != 0x00 then
@@ -134,14 +134,14 @@ module Mimey
             end
           else
             @mode = 2
-            puts "setting modeclock to 2"
+            # puts "setting modeclock to 2"
             if (@ints & 4) != 0x00 then
               @intfired |= 4
               # MMU._if|=2;
             end
           end
           @line += 1
-          puts "increasing curline by 1: #{@line}"
+          # puts "increasing curline by 1: #{@line}"
           if @line == @raster then
             if (@ints & 8) != 0x00 then
               @intfired|=8
@@ -150,7 +150,7 @@ module Mimey
           end
           # @curscan += 640
           @modeclock = 0
-          puts "setting modeclock to 0"
+          # puts "setting modeclock to 0"
         end
 
       # Vblank (10 lines)
