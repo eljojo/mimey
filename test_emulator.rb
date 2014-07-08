@@ -46,8 +46,12 @@ if first_different_step then
 
   implementations = {ruby: step_counter, node: node_step_counter}
   implementations.each do |impl, counter|
-    (index - 5 .. index).each do |step_id|
-      puts "#{impl}: #{counter.steps[step_id]}"
+    (index - 5 .. index + 5).each do |step_id|
+      if step_id == index then
+        puts "----> #{counter.steps[step_id]} <----"
+      else
+        puts "#{impl}: #{counter.steps[step_id]}"
+      end
     end
     puts ""
   end
