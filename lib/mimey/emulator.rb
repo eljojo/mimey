@@ -3,11 +3,13 @@ require 'mimey/cpu/operations'
 module Mimey
   class Emulator
     attr_accessor :debug_mode, :step_by_step, :step_counter
+    attr_reader :screen
 
     def initialize(cpu_options = {})
       cpu_options = CPU::DEFAULTS.merge(cpu_options)
       @cpu = CPU.new(cpu_options)
-      @gpu = GPU.new(LcdScreen.new)
+      @screen = LcdScreen.new
+      @gpu = GPU.new(@screen)
       @cpu.mmu.gpu = @gpu
       @gpu.cpu = @cpu
     end

@@ -43,7 +43,7 @@ jsGB = {
 		Z80._stop = 0;
 		jsGB.doDebug = true
 		// jsGB.step()
-		for(var i = 1; i <= 7; i++) jsGB.frame()
+		for(var i = 1; i <= 8; i++) jsGB.frame()
 		// for(var i = 1; i<=110; i++) jsGB.step()
 
 		// jsGB.debug()

@@ -34,7 +34,7 @@ emulator.reset
 step_counter = Mimey::StepCounter.new
 emulator.step_counter = step_counter
 
-7.times { emulator.frame }
+8.times { emulator.frame }
 # emulator.run_test 110.times
 
 puts ""
@@ -69,6 +69,7 @@ if first_different_step then
 else
   puts "ran #{step_counter.steps.length} steps"
   puts "OMG I couldn't find any errors!"
+  emulator.screen.render
 end
 
 # emulator.debug
