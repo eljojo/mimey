@@ -7,11 +7,20 @@ reference_result = `node reference/emulator.js`
 node_step_counter = Mimey::StepCounter.new
 JSON.parse(reference_result).each do |message|
   next unless step_data = message["step"]
+
   r_data = %w{a b c d e f h l pc}.map do |reg|
     step_data["r"][reg]
   end
   registers = Mimey::StepCounter::Registers.new(*r_data)
-  step = Mimey::StepCounter::Step.new(step_data["total_steps"], step_data["last_op"], registers)
+
+  gpu_r_data = %w{intfired line raster mode}.map do |reg|
+    step_data["gpu_r"][reg]
+  end
+  gpu_registers = Mimey::StepCounter::GPURegisters.new(*gpu_r_data)
+
+  step = Mimey::StepCounter::Step.new(
+    step_data["total_steps"], step_data["last_op"], registers, gpu_registers
+  )
   node_step_counter << step
 end
 

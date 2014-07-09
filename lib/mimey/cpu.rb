@@ -99,7 +99,7 @@ module Mimey
     def step_counter_step
       op_index = OPERATIONS.index(@last_operation)
       registers = StepCounter::Registers.new(a, b, c, d, e, f, h, l, pc)
-      StepCounter::Step.new(@total_steps, op_index, registers)
+      StepCounter::Step.new(@total_steps, op_index, registers, nil)
     end
 
     # Reads the next byte from memory and increments PC by 1

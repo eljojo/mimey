@@ -27,7 +27,13 @@ jsGB = {
 			step: {
 				total_steps: jsGB.totalSteps,
 				last_op: jsGB._lastOp,
-				r: clone(Z80._r)
+				r: clone(Z80._r),
+				gpu_r: {
+					intfired: GPU._intfired,
+					line: GPU._curline,
+					raster: GPU._raster,
+					mode: GPU._linemode
+				}
 			}
 		})
 	},
@@ -35,8 +41,8 @@ jsGB = {
 	runTest: function() {
 		Z80._stop = 0;
 		jsGB.doDebug = true
-		// jsGB.step()
-		jsGB.frame()
+		jsGB.step()
+		// jsGB.frame()
 		for(var i = 1; i<=110; i++) jsGB.step()
 
 		// jsGB.debug()

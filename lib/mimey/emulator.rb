@@ -35,7 +35,9 @@ module Mimey
       @gpu.step
 
       if step_counter then
-        step_counter << @cpu.step_counter_step
+        step = @cpu.step_counter_step
+        step.gpu_r = @gpu.step_counter_registers
+        step_counter << step
       end
     end
 

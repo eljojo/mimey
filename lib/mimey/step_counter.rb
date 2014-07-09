@@ -16,22 +16,28 @@ module Mimey
       end
     end
 
-    class Step < Struct.new(:id, :op, :r)
+    class Step < Struct.new(:id, :op, :r, :gpu_r)
       def eql?(other_step)
         self == other_step
       end
 
       def ==(other_step)
-        self.id == other_step.id && self.op == other_step.op && self.r == other_step.r
+        self.id == other_step.id && self.op == other_step.op && \
+        self.r == other_step.r && self.gpu_r == other_step.gpu_r
       end
 
       def to_s
         regs = %w{pc a b c d e}.map do |reg|
                 "#{reg}: #{r.send(reg)}"
               end
+        gpu_regs = %w{intfired line raster mode}.map do |reg|
+                "#{reg}: #{gpu_r.send(reg)}"
+              end
+
         op_name = CPU::OPERATIONS[op].to_s
         op_name << "\t" if op_name.length <= 7
-        res = ["step #{id}", "op #{op}", op_name] + regs
+
+        res = ["step #{id}", "op #{op}", op_name] + regs + gpu_regs
         res.join("\t")
       end
     end
@@ -51,6 +57,19 @@ module Mimey
         # self.h == other_r.h && \
         # self.l == other_r.l && \
         self.pc == other_r.pc
+      end
+    end
+
+    class GPURegisters < Struct.new(:intfired, :line, :raster, :mode)
+      def eql?(other_r)
+        self == other_r
+      end
+
+      def ==(other_r)
+        self.intfired == other_r.intfired && \
+        self.line == other_r.line && \
+        self.raster == other_r.raster && \
+        self.mode == other_r.mode
       end
     end
   end
