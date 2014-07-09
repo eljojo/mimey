@@ -23,8 +23,8 @@ module Mimey
       end
     end
 
-    # note: jano's implementation of JRNZn is broken
-    # by some reason this one works
+    # note: jano's implementation of JRNZn and JRZn are broken
+    # by some reason this two work
     def jr_nz_n
       i = next_byte
       if i > 127 then
@@ -32,6 +32,18 @@ module Mimey
       end
       @r_m = 2
       if (@f & 0x80) == 0x00 then
+        @pc += i
+        @r_m += 1
+      end
+    end
+
+    def jr_z_n
+      i = next_byte
+      if i > 127 then
+        i = -((~i+1)&255)
+      end
+      @r_m = 2
+      if (@f & 0x80) == 0x80 then
         @pc += i
         @r_m += 1
       end
