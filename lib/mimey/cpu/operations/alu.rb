@@ -315,5 +315,22 @@ module Mimey
       @f |= C_FLAG  if sub & 0xFF00 != 0x00
       @a = sub & 0xFF
     end
+
+
+    # CPn
+    def cpn
+      i = @a
+      m = next_byte
+      i -= m
+      @f = (i < 0) ? 0x50 : 0x40
+      i &= 255
+      if (i == 0x00) then
+        @f |= 0x80
+      end
+      if ( (@a^i^m) & 0x10 != 0x00) then
+        @f |= 0x20
+      end
+      @r_m = 2
+    end
   end
 end

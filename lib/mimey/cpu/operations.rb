@@ -164,7 +164,7 @@ module Mimey
       # 0xF5
       :push_af,    :or_n,       :_F7,       :ld_hlspn,    :_F9,
       # 0xFA
-      :ld_amm,     :ei,        :_FC,       :_FD,         :_FE,
+      :ld_amm,     :ei,        :_FC,       :_FD,         :cpn,
       # 0xFF
       :rst_38
     ].freeze
