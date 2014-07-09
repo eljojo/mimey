@@ -212,9 +212,7 @@ module Mimey
     # Does a logical AND to the A register
     def and_to_a(to_and)
       @a &= to_and
-      @f = 0x00
-      @f |= H_FLAG
-      @f |= Z_FLAG  if @a == 0x00
+      @f = (@a != 0x00) ? 0:0x80
     end
 
     # XOR R operations. Do a logical XOR between A and a 8 bits register and set the result in A
