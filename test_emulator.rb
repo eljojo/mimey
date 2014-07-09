@@ -13,7 +13,7 @@ JSON.parse(reference_result).each do |message|
   end
   registers = Mimey::StepCounter::Registers.new(*r_data)
 
-  gpu_r_data = %w{intfired line raster mode}.map do |reg|
+  gpu_r_data = %w{intfired line raster mode modeclocks}.map do |reg|
     step_data["gpu_r"][reg]
   end
   gpu_registers = Mimey::StepCounter::GPURegisters.new(*gpu_r_data)

@@ -253,7 +253,7 @@ module Mimey
     end
 
     def step_counter_registers
-      Mimey::StepCounter::GPURegisters.new(@intfired, @line, @raster, @mode)
+      Mimey::StepCounter::GPURegisters.new(@intfired, @line, @raster, @mode, @modeclock)
     end
   end
 end

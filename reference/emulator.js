@@ -32,7 +32,8 @@ jsGB = {
 					intfired: GPU._intfired,
 					line: GPU._curline,
 					raster: GPU._raster,
-					mode: GPU._linemode
+					mode: GPU._linemode,
+					modeclocks: GPU._modeclocks
 				}
 			}
 		})

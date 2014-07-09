@@ -30,7 +30,7 @@ module Mimey
         regs = %w{pc a b c d e}.map do |reg|
                 "#{reg}: #{r.send(reg)}"
               end
-        gpu_regs = %w{intfired line raster mode}.map do |reg|
+        gpu_regs = %w{intfired line raster mode modeclocks}.map do |reg|
                 "#{reg}: #{gpu_r.send(reg)}"
               end
 
@@ -60,7 +60,7 @@ module Mimey
       end
     end
 
-    class GPURegisters < Struct.new(:intfired, :line, :raster, :mode)
+    class GPURegisters < Struct.new(:intfired, :line, :raster, :mode, :modeclocks)
       def eql?(other_r)
         self == other_r
       end
@@ -69,7 +69,8 @@ module Mimey
         self.intfired == other_r.intfired && \
         self.line == other_r.line && \
         self.raster == other_r.raster && \
-        self.mode == other_r.mode
+        self.mode == other_r.mode && \
+        self.modeclocks == other_r.modeclocks
       end
     end
   end
