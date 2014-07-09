@@ -64,6 +64,9 @@ if first_different_step then
     end
     puts ""
   end
+else
+  puts "ran #{step_counter.steps.length} steps"
+  puts "OMG I couldn't find any errors!"
 end
 
 # emulator.debug
