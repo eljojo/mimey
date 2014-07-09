@@ -12,6 +12,16 @@ module Mimey
       @r_t = 4
     end
 
+    def ei
+      @ime = 1
+      @r_m = 1
+    end
+
+    def di
+      @ime = 0
+      @r_m = 1
+    end
+
     # Operations array, indexes methods names by opcode
     OPERATIONS = [
       # 0x00
@@ -150,11 +160,11 @@ module Mimey
       :rst_28,
 
       # 0xF0
-      :ld_aio_n,   :pop_af,     :ld_aioc,   :_F3,         :_F4,
+      :ld_aio_n,   :pop_af,     :ld_aioc,   :di,         :_F4,
       # 0xF5
       :push_af,    :or_n,       :_F7,       :ld_hlspn,    :_F9,
       # 0xFA
-      :ld_amm,     :_FB,        :_FC,       :_FD,         :_FE,
+      :ld_amm,     :ei,        :_FC,       :_FD,         :_FE,
       # 0xFF
       :rst_38
     ].freeze
