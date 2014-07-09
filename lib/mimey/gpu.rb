@@ -155,7 +155,7 @@ module Mimey
 
       # Vblank (10 lines)
       when 1
-        if @modeclock >= 456 then
+        if @modeclock >= 114 then
           @modeclock = 0
           @line += 1
 
