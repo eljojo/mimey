@@ -41,10 +41,7 @@ module Mimey
         value = instance_variable_get "@#{r}"
         new_value = (value - 1) & 0xFF
         instance_variable_set "@#{r}", new_value
-        @f &= C_FLAG
-        @f |= N_FLAG
-        @f |= Z_FLAG  if new_value == 0x00
-        @f |= H_FLAG  if (new_value & 0x0F) == 0x0F
+        @f = (new_value != 0x00) ? 0x00 : 0x80
         @r_m = 1
         @r_t = 4
       end
