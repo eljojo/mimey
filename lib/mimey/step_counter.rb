@@ -27,7 +27,7 @@ module Mimey
       end
 
       def to_s
-        regs = %w{pc a b c d e}.map do |reg|
+        regs = %w{pc a b c d e f}.map do |reg|
                 "#{reg}: #{r.send(reg)}"
               end
         gpu_regs = %w{intfired line raster mode modeclocks}.map do |reg|
@@ -37,7 +37,7 @@ module Mimey
         op_name = CPU::OPERATIONS[op].to_s
         op_name << "\t" if op_name.length <= 7
 
-        res = ["step #{id}", "op #{op}", op_name] + regs + gpu_regs
+        res = ["step #{id}", "op 0x#{op.to_s(16).upcase}", op_name] + regs + gpu_regs
         res.join("\t")
       end
     end
@@ -53,7 +53,7 @@ module Mimey
         self.c == other_r.c && \
         self.d == other_r.d && \
         self.e == other_r.e && \
-        # self.f == other_r.f && \
+        self.f == other_r.f && \
         # self.h == other_r.h && \
         # self.l == other_r.l && \
         self.pc == other_r.pc
