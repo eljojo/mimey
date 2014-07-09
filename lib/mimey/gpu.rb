@@ -8,7 +8,7 @@ module Mimey
       @screen = screen
       @vram = Array.new(8192, 0x00)
 
-      reset_tileset
+      reset
 
       @mode = 2
       @modeclock = 0
@@ -17,6 +17,7 @@ module Mimey
       @scx = nil
       @intfired = 0
       @raster = 0
+      @curscan = 0
 
       @bg_map = false
       @bgtile = false
@@ -24,7 +25,7 @@ module Mimey
       @switchlcd = false
 
       @pal = []
-      @scrn = []
+      @scrn = @screen #[]
     end
 
     def [](addr)
@@ -78,13 +79,13 @@ module Mimey
         4.times do |i|
           case ((val >> (i * 2)) & 3)
           when 0
-            @pal[i] = [255,255,255,255]
+            @pal[i] = :white # [255,255,255,255]
           when 1
-            @pal[i] = [192,192,192,255]
+            @pal[i] = :light_gray # [192,192,192,255]
           when 2
-            @pal[i] = [ 96, 96, 96,255]
+            @pal[i] = :dark_gray # [ 96, 96, 96,255]
           when 3
-            @pal[i] = [  0,  0,  0,255]
+            @pal[i] = :black # [  0,  0,  0,255]
           end
         end
       end
@@ -116,7 +117,7 @@ module Mimey
           end
 
           # Write a scanline to the framebuffer
-          # self.renderscan
+          self.renderscan
         end
 
       # Hblank
@@ -127,6 +128,7 @@ module Mimey
             @mode = 1
             # puts "setting modeclock to 1"
             # GPU._canvas.putImageData(GPU._scrn, 0,0);
+            # @screen.render
             # MMU._if |= 1;
             if (@ints & 2) != 0x00 then
               @intfired |= 2
@@ -148,7 +150,7 @@ module Mimey
               # MMU._if|=2;
             end
           end
-          # @curscan += 640
+          @curscan += 640
           @modeclock = 0
           # puts "setting modeclock to 0"
         end
@@ -170,13 +172,20 @@ module Mimey
       # @screen.render
     end
 
-    def reset_tileset
+    def reset
       @tileset = 512.times.map do
         # each tile is 8x8
         8.times.map do
           [0,0,0,0,0,0,0,0]
         end
       end
+
+      @scanrow = 160.times.map { 0 }
+
+      # values set by BIOS (according to reference)
+      @bgtilebase = 0x0000
+      @bgmapbase = 0x1800
+      @winmapbase = 0x1800
     end
 
     def update_tile(addr, val)
@@ -199,58 +208,50 @@ module Mimey
     end
 
     def renderscan
-      puts "RENDERSCANNNN\n\n\n"
-      # VRAM offset for the tile map
-      mapoffs = @bgmap ? 0x1C00 : 0x1800
+      # return unless @lcd_on and @bgon
 
-      # Which line of tiles to use in the map
-      mapoffs += ((@line + @scy) & 255) >> 3
-
-      # Which tile to start with in the map line
-      lineoffs = (@scx >> 3)
-
-      # Which line of pixels to use in the tiles
+      linebase = @curscan
+      mapbase = @bgmapbase + ((((@line + @scy) & 255) >> 3 ) << 5)
       y = (@line + @scy) & 7
-
-      # Where in the tileline to start
       x = @scx & 7
+      t = (@scx >> 3) & 31
+      pixel = nil
+      w = 160
 
-      # Where to render on the canvas
-      canvasoffs = @line * 160 * 4
-
-      # Read tile index from the background map
-      colour = nil
-      tile = @vram[mapoffs + lineoffs]
-
-      # If the tile data set in use is #1, the
-      # indices are signed; calculate a real tile offset
-      if @bgtile == 1 && tile < 128 then
-        tile += 256
-      end
-
-      160.times do |i|
-        # Re-map the tile pixel through the palette
-        colour = @pal[@tileset[tile][y][x]]
-
-        # Plot the pixel to canvas
-        @scrn[canvasoffs+0] = colour[0]
-        @scrn[canvasoffs+1] = colour[1]
-        @scrn[canvasoffs+2] = colour[2]
-        @scrn[canvasoffs+3] = colour[3]
-        canvasoffs += 4
-
-        # When this tile ends, read another
-        x += 1
-        if x == 8 then
-          x = 0
-          lineoffs = (lineoffs + 1) & 31
-          tile = @vram[mapoffs + lineoffs]
-          if @bgtile == 1 && tile < 128 then
-            tile += 256
+      if(@bgtilebase != 0x00) then
+        tile = @vram[mapbase + t]
+        if(tile<128) then tile =256 + tile end
+          tilerow = @tileset[tile][y]
+          begin
+            @scanrow[160-x] = tilerow[x]
+            # GPU._scrn.data[linebase+3] = GPU._palette.bg[tilerow[x]];
+            @scrn[linebase + 3] = @pal[tilerow[x]]
+            x += 1
+            if x==8 then
+              t = (t + 1) & 31
+              x=0
+              tile = @vram[mapbase+t]
+              if tile < 128 then tile = 256 + tile end
+                tilerow = @tileset[tile][y]
+              end
+              linebase += 4
+            end while((w -= 1) > 0)
+          else
+            tilerow = @tileset[@vram[mapbase + t]][y]
+            begin
+              @scanrow[160-x] = tilerow[x]
+              # GPU._scrn.data[linebase+3] = GPU._palette.bg[tilerow[x]];
+              @scrn[linebase + 3] = @pal[tilerow[x]]
+              x += 1
+              if x == 8 then
+                t = (t + 1) & 31
+                x = 0
+                tilerow = @tileset[@vram[mapbase + t]][y]
+              end
+              linebase += 4
+            end while((w -= 1) > 0)
           end
         end
-      end
-    end
 
     def step_counter_registers
       Mimey::StepCounter::GPURegisters.new(@intfired, @line, @raster, @mode, @modeclock)
