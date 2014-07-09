@@ -4,6 +4,7 @@ module Mimey
     WIDTH = 160
     HEIGHT = 10 #144
     COLORS = [107, 100, 47, 40] # lightest to darkest
+    COLOR_NAMES = [:white, :light_gray, :dark_gray, :black]
 
     def initialize
       @screen = (WIDTH * HEIGHT).times.map { 0 }
@@ -18,9 +19,11 @@ module Mimey
     end
 
     def []=(coords, color)
+      return unless color
+      color_code = COLORS[COLOR_NAMES.index(color)]
       x, y = coords
       if x < WIDTH and y < HEIGHT
-        @screen[y * WIDTH + x] = color
+        @screen[y * WIDTH + x] = color_code
       end
     end
 
