@@ -34,8 +34,10 @@ emulator.reset
 step_counter = Mimey::StepCounter.new
 emulator.step_counter = step_counter
 
-emulator.frame
-emulator.run_test 110.times
+7.times { emulator.frame }
+# emulator.run_test 110.times
+
+puts ""
 
 if step_counter.steps.length != node_step_counter.steps.length then
   puts "warning, different step count between reference implementation and ruby implementation"

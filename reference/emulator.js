@@ -43,8 +43,8 @@ jsGB = {
 		Z80._stop = 0;
 		jsGB.doDebug = true
 		// jsGB.step()
-		jsGB.frame()
-		for(var i = 1; i<=110; i++) jsGB.step()
+		for(var i = 1; i <= 7; i++) jsGB.frame()
+		// for(var i = 1; i<=110; i++) jsGB.step()
 
 		// jsGB.debug()
 
@@ -327,7 +327,7 @@ GPU = {
 								do
 								{
 									GPU._scanrow[160-x] = tilerow[x];
-									GPU._scrn.data[linebase+3] = GPU._palette.bg[tilerow[x]];
+									// GPU._scrn.data[linebase+3] = GPU._palette.bg[tilerow[x]];
 									x++;
 									if(x==8) { t=(t+1)&31; x=0; tilerow=GPU._tilemap[GPU._vram[mapbase+t]][y]; }
 									linebase+=4;
