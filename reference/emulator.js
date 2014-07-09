@@ -42,8 +42,8 @@ jsGB = {
 	runTest: function() {
 		Z80._stop = 0;
 		jsGB.doDebug = true
-		jsGB.step()
-		// jsGB.frame()
+		// jsGB.step()
+		jsGB.frame()
 		for(var i = 1; i<=110; i++) jsGB.step()
 
 		// jsGB.debug()
@@ -58,10 +58,10 @@ jsGB = {
 			jsGB._lastOp = MMU.rb(Z80._r.pc++);
 			Z80._map[jsGB._lastOp]();
 			Z80._r.pc &= 65535;
-			if (jsGB.doDebug) jsGB.debug()
 		}
 		Z80._clock.m += Z80._r.m;
 		GPU.checkline();
+		if (jsGB.doDebug) jsGB.debug()
 	},
 
 	frame: function()
