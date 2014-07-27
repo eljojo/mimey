@@ -80,18 +80,9 @@ is being able to run [Pokémon Red and Blue][red-blue].
 [episode-64]: http://bulbapedia.bulbagarden.net/wiki/EP064
 [imran-nazar]: http://imrannazar.com/GameBoy-Emulation-in-JavaScript
 
-## Roadmap (Based on Imran Nazar Article)
+## Current Status
 
-- [] The CPU
-- [] Memory
-- [] GPU Timings
-- [] Graphics
-- [] Integration
-- [] Input
-- [] Sprites
-- [] Interrupts
-- [] Memory Banking
-- [] Timers
+![yay!](./current_status.png)
 
 ## Licence
 
