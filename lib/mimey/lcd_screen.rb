@@ -4,7 +4,12 @@ module Mimey
     WIDTH = 160
     HEIGHT = 10 #144
     COLORS = [107, 100, 47, 40] # lightest to darkest
-    COLOR_NAMES = [:white, :light_gray, :dark_gray, :black]
+    COLOR_MAPPINGS = {
+      255 => 0,
+      192 => 1,
+      96 => 2,
+      0 => 3
+    }
 
     def initialize
       @screen = (WIDTH * HEIGHT).times.map { 0 }
@@ -20,18 +25,20 @@ module Mimey
 
     def []=(coords, color)
       return unless color
-      color_code = COLORS[COLOR_NAMES.index(color)]
-      x, y = coords
-      if x < WIDTH and y < HEIGHT
-        @screen[y * WIDTH + x] = color_code
-      end
+      color_index = COLOR_MAPPINGS[color]
+      @screen[coords] = COLORS[color_index]
+      # x, y = coords
+      # if x < WIDTH and y < HEIGHT
+      #   @screen[y * WIDTH + x] = color_code
+      # end
     end
 
     private
     # https://github.com/fazibear/colorize/blob/master/lib/colorize.rb
     # http://misc.flogisoft.com/bash/tip_colors_and_formatting
     def print_pixel(color)
-      code = COLORS[color]
+      # code = COLORS[color]
+      code = color
       print "\e[49m\e[#{code}m \e[49m"
     end
   end
