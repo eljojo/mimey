@@ -11,6 +11,8 @@ module Mimey
       0 => 3
     }
 
+    attr_accessor :screen
+
     def initialize
       @screen = (WIDTH * HEIGHT).times.map { 0 }
     end
@@ -25,8 +27,8 @@ module Mimey
 
     def []=(coords, color)
       return unless color
-      color_index = COLOR_MAPPINGS[color]
-      @screen[coords] = COLORS[color_index]
+      # i want to do it this way so I can set @screen to @scrn
+      @screen[coords] = color
       # x, y = coords
       # if x < WIDTH and y < HEIGHT
       #   @screen[y * WIDTH + x] = color_code
@@ -37,8 +39,8 @@ module Mimey
     # https://github.com/fazibear/colorize/blob/master/lib/colorize.rb
     # http://misc.flogisoft.com/bash/tip_colors_and_formatting
     def print_pixel(color)
-      # code = COLORS[color]
-      code = color
+      # this is not optimal. lol.
+      code = COLORS[COLOR_MAPPINGS[color]]
       print "\e[49m\e[#{code}m \e[49m"
     end
   end

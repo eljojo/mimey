@@ -106,8 +106,18 @@ if first_different_step then
 else
   puts "ran #{step_counter.steps.length} steps"
   puts "OMG I couldn't find any errors!"
-  puts step_counter.steps.last.gpu_r.scrn.inspect
-  # emulator.screen.render
+  screen = Mimey::LcdScreen.new
+  scrn = emulator.gpu.scrn
+  if scrn.compact.length != scrn.length then
+    puts "warning, the screen has some nils"
+    puts scrn.length
+    puts scrn.compact.length
+    puts scrn[0..100].inspect
+    puts scrn[0..100].compact.inspect
+  end
+
+  screen.screen = scrn
+  screen.render
 end
 
 # emulator.debug

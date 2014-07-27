@@ -3,6 +3,7 @@ module Mimey
   class GPU
     attr_reader :vram
     attr_accessor :cpu
+    attr_reader :scrn # delete this later
 
     def initialize(screen)
       @screen = screen
@@ -306,7 +307,8 @@ module Mimey
           tilerow = @tilemap[tile][y]
           160.downto(1).each do |w|
             @scanrow[160 - x] = tilerow[x]
-            @scrn[linebase + 3] = @palette[:bg][tilerow[x]]
+            # by some reason we have to divide this by 4. don't ask me why.
+            @scrn[(linebase + 3)/4] = @palette[:bg][tilerow[x]]
             x += 1
             if x == 8 then
               t = (t + 1) & 31
@@ -323,7 +325,8 @@ module Mimey
           tilerow = @tilemap[@vram[mapbase + t]][y]
           160.downto(1).each do |w|
             @scanrow[160 - x] = tilerow[x]
-            @scrn[linebase + 3] = @palette[:bg][tilerow[x]]
+            # by some reason we have to divide this by 4. don't ask me why.
+            @scrn[(linebase + 3)/4] = @palette[:bg][tilerow[x]]
             x += 1
             if x == 8 then
               t = (t + 1) & 31

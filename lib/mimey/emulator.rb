@@ -4,6 +4,7 @@ module Mimey
   class Emulator
     attr_accessor :debug_mode, :step_by_step, :step_counter
     attr_reader :screen
+    attr_reader :gpu # delete this later
 
     def initialize(cpu_options = {})
       cpu_options = CPU::DEFAULTS.merge(cpu_options)
