@@ -25,7 +25,7 @@ module Mimey
         end
       end
 
-      @scrn = Array.new(160 * 144 * 4)
+      @scrn = [] #Array.new(160 * 144 * 4)
 
       @curline = 0
       @curscan = 0
@@ -417,7 +417,8 @@ module Mimey
     end
 
     def step_counter_registers
-      Mimey::StepCounter::GPURegisters.new(@ints, @curline, @raster, @linemode, @modeclocks)
+      scrn = @scrn.compact.reject{|p| p == 0}
+      Mimey::StepCounter::GPURegisters.new(@ints, @curline, @raster, @linemode, @modeclocks, scrn, @palette[:bg].dup, @bgtilebase, @bgmapbase, @lcdon, @bgon)
     end
   end
 end

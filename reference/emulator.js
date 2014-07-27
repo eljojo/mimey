@@ -1,4 +1,5 @@
 var resultDebug = []
+var _ = require('./underscore.js')
 function debugMessage() {
 	// resultDebug.push({message: arguments})
 }
@@ -22,22 +23,28 @@ jsGB = {
 	totalSteps: 0,
 	doDebug: false,
 
-	debug: function() {
-		resultDebug.push({
-			step: {
-				total_steps: jsGB.totalSteps,
-				last_op: jsGB._lastOp,
-				r: clone(Z80._r),
-				gpu_r: {
-					intfired: GPU._intfired,
-					line: GPU._curline,
-					raster: GPU._raster,
-					mode: GPU._linemode,
-					modeclocks: GPU._modeclocks
-				}
-			}
-		})
-	},
+  debug: function() {
+    console.log(JSON.stringify({
+      step: {
+        total_steps: jsGB.totalSteps,
+        last_op: jsGB._lastOp,
+        r: Z80._r,
+        gpu_r: {
+          intfired: GPU._intfired,
+          line: GPU._curline,
+          raster: GPU._raster,
+          mode: GPU._linemode,
+          modeclocks: GPU._modeclocks,
+          bg_palette: GPU._palette.bg,
+          scrn: _.compact(GPU._scrn),
+          bgtilebase: GPU._bgtilebase,
+          bgmapbase: GPU._bgmapbase,
+          lcdon: GPU._lcdon ? true : false,
+          bgon: GPU._bgon ? true : false,
+        }
+      }
+    }))
+  },
 
 	runTest: function() {
 		Z80._stop = 0;
@@ -169,30 +176,8 @@ GPU = {
     }
 
     debugMessage('GPU', 'Initialising screen.');
-    // var c = document.getElementById('jsgb_screen');
-    // if(c && c.getContext)
-    // {
-    //   GPU._canvas = c.getContext('2d');
-    //   if(!GPU._canvas)
-    //   {
-    //     throw new Error('GPU: Canvas context could not be created.');
-    //   }
-    //   else
-    //   {
-    //     if(GPU._canvas.createImageData)
-    //       GPU._scrn = GPU._canvas.createImageData(160,144);
-    //     else if(GPU._canvas.getImageData)
-    //       GPU._scrn = GPU._canvas.getImageData(0,0,160,144);
-    //     else
-    //       GPU._scrn = {'width':160, 'height':144, 'data':new Array(160*144*4)};
-    //
-    //     for(i=0; i<GPU._scrn.data.length; i++)
-    //       GPU._scrn.data[i]=255;
-    //
-    //     GPU._canvas.putImageData(GPU._scrn, 0,0);
-    //   }
-    // }
 
+    GPU._scrn = []
     GPU._curline=0;
     GPU._curscan=0;
     GPU._linemode=2;
@@ -239,6 +224,7 @@ GPU = {
 					if(GPU._curline == 143)
 					{
 						GPU._linemode = 1;
+            // this is where we actually render
 						// GPU._canvas.putImageData(GPU._scrn, 0,0);
 						// debugMessage(GPU._scrn)
 						MMU._if |= 1;
@@ -315,7 +301,7 @@ GPU = {
 								do
 								{
 									GPU._scanrow[160-x] = tilerow[x];
-									GPU._scrn.data[linebase+3] = GPU._palette.bg[tilerow[x]];
+									GPU._scrn[linebase+3] = GPU._palette.bg[tilerow[x]];
 									x++;
 									if(x==8) { t=(t+1)&31; x=0; tile=GPU._vram[mapbase+t]; if(tile<128) tile=256+tile; tilerow = GPU._tilemap[tile][y]; }
 									linebase+=4;
@@ -327,7 +313,7 @@ GPU = {
 								do
 								{
 									GPU._scanrow[160-x] = tilerow[x];
-									// GPU._scrn.data[linebase+3] = GPU._palette.bg[tilerow[x]];
+									GPU._scrn[linebase+3] = GPU._palette.bg[tilerow[x]];
 									x++;
 									if(x==8) { t=(t+1)&31; x=0; tilerow=GPU._tilemap[GPU._vram[mapbase+t]][y]; }
 									linebase+=4;
@@ -1627,4 +1613,4 @@ Z80._cbmap = [
 debugMessage('emulator!')
 jsGB.reset();
 jsGB.runTest()
-console.log(JSON.stringify(resultDebug))
+
