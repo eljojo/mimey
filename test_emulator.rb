@@ -34,7 +34,7 @@ emulator.reset
 step_counter = Mimey::StepCounter.new
 emulator.step_counter = step_counter
 
-8.times { emulator.frame }
+9.times { emulator.frame }
 # emulator.run_test 110.times
 
 puts ""
