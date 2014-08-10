@@ -2,8 +2,6 @@ require 'mimey'
 require 'json'
 require 'pp'
 
-puts "testing reference implementation"
-
 class ReferenceImplementationTester
   attr_reader :step_counter
 
@@ -57,67 +55,127 @@ class ReferenceImplementationTester
   end
 end
 
-node_tester = ReferenceImplementationTester.new
-node_tester.run_test
-node_step_counter = node_tester.step_counter
+class StepCounterComparer
+  def initialize(node_step_counter, ruby_step_counter)
+    @node_step_counter = node_step_counter
+    @ruby_step_counter = ruby_step_counter
+  end
 
-puts "running ruby implementation"
-emulator = Mimey::Emulator.new
-# emulator.debug_mode = true
-# emulator.step_by_step = true
-emulator.load_rom("./test_roms/opus5.gb")
-emulator.reset
+  def compare
+    if step_counter.steps.length != node_step_counter.steps.length then
+      puts "warning, different step count between reference implementation and ruby implementation"
+      puts "ruby: #{step_counter.steps.length}, node: #{node_step_counter.steps.length}"
+    end
 
-step_counter = Mimey::StepCounter.new
-emulator.step_counter = step_counter
+    first_different_step, index = step_counter.compare_with(node_step_counter)
+    if first_different_step then
+      when_different(first_different_step, index)
+      :different
+    else
+      when_equal
+      :equal
+    end
+  end
 
-9.times { emulator.frame; GC.start}
-# emulator.run_test 110.times
+  def when_different(first_different_step, index)
+    puts "found first different step! (found at step ##{index + 1})"
+    nod_step = node_step_counter.steps[index]
+    rub_step = step_counter.steps[index]
 
-puts ""
+    puts ""
+    puts "ruby: #{rub_step.inspect_different_variables(nod_step)}" if rub_step
+    puts "node: #{nod_step.inspect_different_variables(rub_step)}" if nod_step
+    puts ""
 
-if step_counter.steps.length != node_step_counter.steps.length then
-  puts "warning, different step count between reference implementation and ruby implementation"
-  puts "ruby: #{step_counter.steps.length}, node: #{node_step_counter.steps.length}"
+    implementations = {ruby: step_counter, node: node_step_counter}
+    implementations.each do |impl, counter|
+      (index - 5 .. index + 5).each do |step_id|
+        if step_id == index then
+          puts "----> #{counter.steps[step_id]} <----"
+        else
+          puts "#{impl}: #{counter.steps[step_id]}"
+        end
+      end
+      puts ""
+    end
+  end
+
+  def when_equal
+    puts "ran #{step_counter.steps.length} steps"
+    puts "OMG I couldn't find any errors!"
+  end
+
+  private
+  attr_reader :ruby_step_counter, :node_step_counter
+  alias_method :step_counter, :ruby_step_counter
 end
 
-first_different_step, index = step_counter.compare_with(node_step_counter)
-if first_different_step then
-  puts "found first different step! (found at step ##{index + 1})"
-  nod_step = node_step_counter.steps[index]
-  rub_step = step_counter.steps[index]
+class EmulatorTester
+  def initialize
+    @emulator = Mimey::Emulator.new
+    # emulator.debug_mode = true
+    # emulator.step_by_step = true
+    emulator.load_rom("./test_roms/opus5.gb")
+    emulator.reset
+  end
 
-  puts ""
-  puts "ruby: #{rub_step.inspect_different_variables(nod_step)}" if rub_step
-  puts "node: #{nod_step.inspect_different_variables(rub_step)}" if nod_step
-  puts ""
+  def run_normally(frames: 9)
+    frames.times do
+      emulator.frame
+      render_screen(strict: true)
+    end
+  end
 
-  implementations = {ruby: step_counter, node: node_step_counter}
-  implementations.each do |impl, counter|
-    (index - 5 .. index + 5).each do |step_id|
-      if step_id == index then
-        puts "----> #{counter.steps[step_id]} <----"
-      else
-        puts "#{impl}: #{counter.steps[step_id]}"
+  def run_test
+    run_node_test
+    ruby_step_counter = Mimey::StepCounter.new
+    emulator.step_counter = ruby_step_counter
+    run_ruby_test
+    step_counter_comparer = StepCounterComparer.new(ruby_step_counter, node_tester.step_counter)
+    case step_counter_comparer.compare
+    when :equal
+      render_screen(test_nils: true)
+    end
+  end
+
+  def run_node_test
+    puts "running node test"
+    @node_tester = ReferenceImplementationTester.new
+    node_tester.run_test
+  end
+
+  def run_ruby_test
+    puts "running ruby implementation"
+    9.times { emulator.frame; GC.start}
+  end
+
+  def render_screen(test_nils: false, strict: false)
+    screen = Mimey::LcdScreen.new
+    scrn = emulator.gpu.scrn
+    if test_nils && scrn.compact.length != scrn.length then
+      puts "warning, the screen has some nils"
+      puts scrn.length
+      puts scrn.compact.length
+      puts scrn[0..100].inspect
+      puts scrn[0..100].compact.inspect
+    end
+    if strict then
+      if scrn.first.nil? then
+        return
       end
     end
-    puts ""
-  end
-else
-  puts "ran #{step_counter.steps.length} steps"
-  puts "OMG I couldn't find any errors!"
-  screen = Mimey::LcdScreen.new
-  scrn = emulator.gpu.scrn
-  if scrn.compact.length != scrn.length then
-    puts "warning, the screen has some nils"
-    puts scrn.length
-    puts scrn.compact.length
-    puts scrn[0..100].inspect
-    puts scrn[0..100].compact.inspect
+
+    # clear screen
+    puts "\e[H\e[2J"
+
+    screen.screen = scrn
+    screen.render
   end
 
-  screen.screen = scrn
-  screen.render
+  attr_reader :emulator
+  private
+  attr_reader :node_tester
 end
 
-# emulator.debug
+emulator_tester = EmulatorTester.new
+emulator_tester.run_normally(frames: 20)
