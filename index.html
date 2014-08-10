@@ -1,0 +1,62 @@
+<html>
+  <body>
+     <h1>Simple Echo & Chat Server</h1>
+     <canvas id="screen"></canvas>
+     <div id="msgs"></div>
+  </body>
+
+  <script type="text/javascript">
+    window.onload = function(){
+      (function(){
+        var show = function(el){
+          return function(msg){ el.innerHTML = msg + '<br />' + el.innerHTML; }
+        }(document.getElementById('msgs'));
+
+        var c = document.getElementById('screen');
+        var GPU = {}
+        if (c && c.getContext) {
+            GPU._canvas = c.getContext('2d');
+            if (!GPU._canvas) {
+                throw new Error('GPU: Canvas context could not be created.');
+            } else {
+                if (GPU._canvas.createImageData)
+                    GPU._scrn = GPU._canvas.createImageData(160, 144);
+                else if (GPU._canvas.getImageData)
+                    GPU._scrn = GPU._canvas.getImageData(0, 0, 160, 144);
+                else
+                    GPU._scrn = {
+                        'width': 160,
+                        'height': 144,
+                        'data': new Array(160 * 144 * 4)
+                    };
+
+                for (i = 0; i < GPU._scrn.data.length; i++)
+                    GPU._scrn.data[i] = 255;
+
+                GPU._canvas.putImageData(GPU._scrn, 0, 0);
+            }
+        }
+
+        var ws       = new WebSocket('ws://' + window.location.host + window.location.pathname);
+        ws.onopen    = function()  { show('websocket opened'); };
+        ws.onclose   = function()  { show('websocket closed'); }
+        ws.onmessage = function(m) {
+          var scrn = JSON.parse(m.data);
+          show('websocket message: ' +  scrn.length);
+
+          for (i = 0; i < scrn.length; i++) {
+            // https://developer.mozilla.org/en/docs/Web/API/ImageData
+            var index = i * 4;
+            GPU._scrn.data[index - 4] = scrn[i];
+            GPU._scrn.data[index - 3] = scrn[i];
+            GPU._scrn.data[index - 2] = scrn[i];
+            // GPU._scrn.data[index] = 255;
+          }
+
+          GPU._canvas.putImageData(GPU._scrn, 0, 0);
+        };
+      })();
+    }
+  </script>
+</html>
+

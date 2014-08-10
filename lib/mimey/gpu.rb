@@ -7,6 +7,7 @@ module Mimey
 
     def initialize(screen)
       @screen = screen
+      @on_render = nil
       reset
     end
 
@@ -219,11 +220,18 @@ module Mimey
       end
     end
 
+    def on_render(on_render)
+      @on_render = on_render
+    end
+
     def hblank
       if @modeclocks >= 51 then
         # End of hblank for last scanline; render screen
         if @curline == 143 then
           @linemode = 1
+          if @on_render then
+            @on_render.call(@scrn)
+          end
           # @canvas.putImageData(@scrn, 0, 0)
           # MMU._if |= 1
           if (@ints & 2) != 0x00 then

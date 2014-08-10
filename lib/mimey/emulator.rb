@@ -51,6 +51,10 @@ module Mimey
       end while @cpu.clock_m < fclk
     end
 
+    def on_render(on_render)
+      @gpu.on_render(on_render)
+    end
+
     def debug
       @cpu.debug
     end
