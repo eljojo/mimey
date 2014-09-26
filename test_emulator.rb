@@ -159,5 +159,5 @@ class EmulatorTester
 end
 
 emulator_tester = EmulatorTester.new
-# emulator_tester.run_normally(frames: 9)
-emulator_tester.run_test
+emulator_tester.run_normally(frames: 5)
+# emulator_tester.run_test
