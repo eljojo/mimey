@@ -19,7 +19,7 @@ class ReferenceImplementationTester
       end
       registers = Mimey::StepCounter::Registers.new(*r_data)
 
-      gpu_r_data = %w{intfired line raster mode modeclocks scrn bg_palette bgtilebase bgmapbase lcdon bgon}.map do |reg|
+      gpu_r_data = %w{intfired line raster mode modeclocks bg_palette bgtilebase bgmapbase lcdon bgon}.map do |reg|
         if reg == "bg_palette" then
           step_data["gpu_r"][reg]
         else
@@ -38,15 +38,8 @@ class ReferenceImplementationTester
   end
 
   def reference_result
-    cache_path = "cache/#{reference_hash}.txt"
-    if File.exist?(cache_path) then
-      puts "using cache"
-      node_result = File.read(cache_path)
-    else
-      puts "not found cache for #{reference_hash}, running nodejs"
-      node_result = `node reference/emulator.js`
-      File.write(cache_path, node_result)
-    end
+    puts "running nodejs version"
+    node_result = `node reference/emulator.js`
     node_result.split("\n")
   end
 
@@ -122,7 +115,7 @@ class EmulatorTester
   def run_normally(frames: 9)
     frames.times do
       emulator.frame
-      render_screen(strict: true)
+      render_screen
     end
   end
 
@@ -134,7 +127,7 @@ class EmulatorTester
     step_counter_comparer = StepCounterComparer.new(ruby_step_counter, node_tester.step_counter)
     case step_counter_comparer.compare
     when :equal
-      render_screen(test_nils: true)
+      render_screen
     end
   end
 
@@ -149,21 +142,9 @@ class EmulatorTester
     9.times { emulator.frame; GC.start}
   end
 
-  def render_screen(test_nils: false, strict: false)
+  def render_screen
     screen = Mimey::LcdScreen.new
-    scrn = emulator.gpu.scrn
-    if test_nils && scrn.compact.length != scrn.length then
-      puts "warning, the screen has some nils"
-      puts scrn.length
-      puts scrn.compact.length
-      puts scrn[0..100].inspect
-      puts scrn[0..100].compact.inspect
-    end
-    if strict then
-      if scrn.first.nil? then
-        return
-      end
-    end
+    scrn = emulator.gpu.scrn.compact
 
     # clear screen
     puts "\e[H\e[2J"
@@ -178,4 +159,5 @@ class EmulatorTester
 end
 
 emulator_tester = EmulatorTester.new
-emulator_tester.run_normally(frames: 20)
+# emulator_tester.run_normally(frames: 9)
+emulator_tester.run_test

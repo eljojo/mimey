@@ -36,7 +36,6 @@ jsGB = {
           mode: GPU._linemode,
           modeclocks: GPU._modeclocks,
           bg_palette: GPU._palette.bg,
-          scrn: _.compact(GPU._scrn),
           bgtilebase: GPU._bgtilebase,
           bgmapbase: GPU._bgmapbase,
           lcdon: GPU._lcdon ? true : false,

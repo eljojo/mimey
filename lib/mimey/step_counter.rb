@@ -44,8 +44,6 @@ module Mimey
 
         res = ["step #{id}", "op 0x#{op.to_s(16).upcase}", op_name] + regs + gpu_regs
 
-        res << "scrn: #{gpu_r.scrn.compact.length}"
-
         res.join("\t")
       end
 
@@ -85,7 +83,7 @@ module Mimey
       end
     end
 
-    class GPURegisters < Struct.new(:intfired, :line, :raster, :mode, :modeclocks, :scrn, :bg_palette, :bgtilebase, :bgmapbase, :lcdon, :bgon)
+    class GPURegisters < Struct.new(:intfired, :line, :raster, :mode, :modeclocks, :bg_palette, :bgtilebase, :bgmapbase, :lcdon, :bgon)
       def eql?(other_r)
         self == other_r
       end
