@@ -6,28 +6,38 @@ A [Game Boy][gameboy] emulator written in Ruby.
 
 ## Status
 
-At the moment Mimey is in a very early stage and it was abandoned for 3 years.
-It emulates only a half of the CPU opcodes.
+At the moment Mimey is in an almost-abandoned stage, but at least is capable of the first frame of a gameboy game.
 
-## Development
+If you actually want to work on it, you should check out ``master``. If you'd like to make it run, check out [``minimal``](https://github.com/eljojo/mimey/tree/minimal) (which is not minimal at all).
 
-Install bundler:
+## How to run this?
+
+Clone the repo:
 
 ```
-gem install bundler
+git clone git@github.com:eljojo/mimey.git
+cd mimey
 ```
 
-Run bundler:
+Checkout the minimal branch
+
+```
+git checkout minimal
+```
+
+Bundle install
 
 ```
 bundle install
 ```
 
-Run the tests:
+RUN IT
 
 ```
-bundle exec rspec
+bundle exec ruby test_emulator.rb
 ```
+
+you should see something like the current status below. if you don't, ping me [@eljojo](https://twitter.com/eljojo)
 
 ## FAQ
 
